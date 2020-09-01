@@ -21,6 +21,22 @@ const calcuttaStore = (action, key, data) => {
   }
 }
 
+const teamDisplayName = ({ name, seed }) => {
+  if (seed !== undefined && seed !== null) {
+    return `(${+seed}) ${name}`;
+  }
+
+  return name;
+}
+
+const dateTimeDisplay = (dateString) => {
+  let date = new Date(dateString);
+
+  return date.toLocaleDateString();
+}
+
 export {
-  calcuttaStore
+  calcuttaStore,
+  teamDisplayName,
+  dateTimeDisplay
 };

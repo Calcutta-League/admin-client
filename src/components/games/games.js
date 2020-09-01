@@ -1,40 +1,15 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import GameSelection from './gameSelection';
-
-const columns = [
-  {
-    title: 'Home',
-    dataIndex: 'Team1Name'
-  },
-  {
-    title: 'Score',
-    dataIndex: 'Team1Score'
-  },
-  {
-    title: 'Away',
-    dataIndex: 'Team2Name'
-  },
-  {
-    title: 'Score',
-    dataIndex: 'Team2Score'
-  },
-  {
-    title: 'Date',
-    dataIndex: 'EventDate'
-  },
-  {
-    title: 'Time',
-    dataIndex: 'EventDate'
-  }
-];
+import { GameProvider } from '../../context/gameContext';
+import GamesList from './gamesList';
 
 function Games() {
 
   return (
-    <Fragment>
+    <GameProvider>
       <GameSelection />
-      {/* GamesList */}
-    </Fragment>
+      <GamesList />
+    </GameProvider>
   );
 }
 

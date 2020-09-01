@@ -1,42 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Row, Col, Select, DatePicker } from 'antd';
-import moment from 'moment';
+import { useGameState, useGameDispatch } from '../../context/gameContext';
+import GameService from '../../services/games/games.service';
+import { GAME_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { useAuthState } from '../../context/authContext';
 
 const { Option } = Select;
 
 function GameSelection() {
 
-  const [sportId, setSportId] = useState();
-  const [dateString, setDateString] = useState('');
+  const { sportId, gameDate, sportsOptions } = useGameState();
+  const { authenticated, token } = useAuthState();
+
+  const gameDispatch = useGameDispatch();
+
+  useEffect(() => {
+    if (!!authenticated) {
+      getSportOptions();
+    }
+  }, [authenticated]);
+
+  const getSportOptions = () => {
+    GameService.callApi(GAME_SERVICE_ENDPOINTS.GET_SPORT_OPTIONS, { token: token }).then(data => {
+      gameDispatch({ type: 'update', key: 'sportsOptions', value: data.data });
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
   const generateOptions = () => {
-    return (
-      [
-        <Option value={5} key={5}>Major League Baseball</Option>,
-        <Option value={6} key={6}>National Hockey League</Option>,
-        <Option value={7} key={7}>National Basketball Association</Option>
-      ]
-    );
+    if (sportsOptions !== undefined) {
+      const options = sportsOptions.map(sport => {
+        return <Option value={sport.id} key={sport.id}>{sport.name}</Option>;
+      });
+  
+      return (options);
+    }
   }
 
   const handleSportSelection = (sportId) => {
-    console.log(sportId);
-    setSportId(sportId);
-
-    requestGames();
+    gameDispatch({ type: 'update', key: 'sportId', value: sportId });
   }
 
   const handleDateSelection = (dateObj, dateString) => {
-    console.log(dateString);
-    setDateString(dateString);
-
-    requestGames();
-  }
-
-  const requestGames = () => {
-    if (sportId && dateString) {
-      // send API request
-    }
+    gameDispatch({ type: 'update', key: 'gameDate', value: dateString });
   }
 
   return (

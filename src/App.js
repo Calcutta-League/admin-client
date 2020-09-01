@@ -3,9 +3,12 @@ import { Router } from '@reach/router';
 import { Layout, Result } from 'antd';
 import 'antd/dist/antd.css';
 
-import Sidenav from './components/sidenav/sidenav';
+import Sidenav from './components/navigation/sidenav';
 import { NavProvider } from './context/navContext';
 import Games from './components/games/games';
+import Topnav from './components/navigation/topnav';
+import { AuthProvider } from './context/authContext';
+import AuthModal from './components/modals/authModal';
 
 const { Header, Content } = Layout;
 
@@ -13,10 +16,10 @@ function App() {
   return (
     <div className="App">
       <Layout style={{ height: '100vh' }}>
-        {/* <AuthProvider> */}
+        <AuthProvider>
           <NavProvider>
-            <Header style={{ padding: '0 25px' }}>
-              {/* <Topnav /> */}
+            <Header style={{ padding: '0' }}>
+              <Topnav />
             </Header>
 
             <Layout style={{ height: 'calc(100vh - 64px)' }}>
@@ -40,8 +43,9 @@ function App() {
                 </Content>
               </Layout>
             </Layout>
+            <AuthModal />
           </NavProvider>
-        {/* </AuthProvider> */}
+        </AuthProvider>
       </Layout>
     </div>
   );
