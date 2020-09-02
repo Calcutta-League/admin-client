@@ -205,9 +205,11 @@ function GamesList(props) {
     }).then(response => {
       console.log(response);
       setUpdateScoresLoading(false);
+      scoresRef.current = {};
       requestGames();
     }).catch(error => {
       setUpdateScoresLoading(false);
+      scoresRef.current = {};
       console.log(error);
     });
   }
