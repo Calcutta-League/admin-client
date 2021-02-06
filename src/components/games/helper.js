@@ -50,11 +50,11 @@ export const getDatePickerStyleByDate = (current, numGames, numUnscoredGames) =>
       // blue border
       style.border = '1px solid #1890ff';
       style.borderRadius = '50%';
-    } else if (pastFlag && (numGames - numUnscoredGames) > 0) {
+    } else if (pastFlag && numUnscoredGames > 0) {
       // red border
       style.border = '1px solid #ff4d4e';
       style.borderRadius = '50%';
-    } else if (pastFlag && (numGames - numUnscoredGames) == 0) {
+    } else if (pastFlag && numUnscoredGames == 0) {
       // green border
       style.border = '1px solid #53c41a';
       style.borderRadius = '50%';

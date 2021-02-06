@@ -20,7 +20,7 @@ describe('getGamesCountByDate', () => {
 
 describe('getDatePickerStyleByDate', () => {
   test('returns green border', () => {
-    let style = getDatePickerStyleByDate('2020-01-01', 5, 5);
+    let style = getDatePickerStyleByDate('2020-01-01', 5, 0);
 
     let expected = {
       border: '1px solid #53c41a',
@@ -31,7 +31,7 @@ describe('getDatePickerStyleByDate', () => {
   });
 
   test('returns red border', () => {
-    let style = getDatePickerStyleByDate('2020-01-01', 5, 4);
+    let style = getDatePickerStyleByDate('2020-01-01', 5, 5);
 
     let expected = {
       border: '1px solid #ff4d4e',
