@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "cross-env CI=true react-scripts test --coverage --testResultsProcessor jest-sonar-reporter",
+    "test": "CI=true react-scripts test --coverage --testResultsProcessor jest-sonar-reporter",
     "test-watch": "react-scripts test",
     "eject": "react-scripts eject"
   },
