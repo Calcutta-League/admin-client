@@ -29,6 +29,19 @@ export const gameEndpoints = {
     return apiService(options);
   },
 
+  getGamesMetadata: function(apiService, params) {
+    let options = {
+      method: 'GET',
+      url: `${GAME_SERVICE_ENDPOINTS.GET_GAMES_METADATA}/${params.sportId}/${params.searchDate}`
+    };
+
+    if (params.token !== undefined) {
+      options.headers = { 'x-cognito-token': params.token };
+    }
+
+    return apiService(options);
+  },
+
   updateScores: function(apiService, params) {
     let options = {
       method: 'POST',

@@ -138,6 +138,11 @@ function GamesList(props) {
 
   useEffect(() => {
     requestGames();
+
+    // add logic to request new metadata when the search date gets to a new point
+    if (!!authenticated) {
+      getGamesMetadata();
+    }
   }, [sportId, gameDate, authenticated]);
 
   const requestGames = () => {
@@ -158,6 +163,22 @@ function GamesList(props) {
         console.log(error);
       });
     }
+  }
+
+  const getGamesMetadata = () => {
+    let searchDate = new Date();
+    let dateString = `${searchDate.getFullYear()}-${searchDate.getMonth() + 1}-${searchDate.getDate()}`;
+
+    GameService.callApi(GAME_SERVICE_ENDPOINTS.GET_GAMES_METADATA, {
+      token: token,
+      sportId: sportId,
+      searchDate: dateString
+    }).then(response => {
+      console.log(response);
+      gameDispatch({ type: 'update', key: 'gamesMetadataArr', value: response.data });
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   const scoreChange = ({ gameId, score, isHome }) => {
