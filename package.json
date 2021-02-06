@@ -20,8 +20,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test-cover": "react-scripts test --coverage --watchAll=false",
+    "test": "cross-env CI=true react-scripts test --coverage --testResultsProcessor jest-sonar-reporter",
+    "test-watch": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
