@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Row, Col, Select, DatePicker, Badge } from 'antd';
+import { Input, Row, Col, Select, DatePicker } from 'antd';
 import { useGameState, useGameDispatch } from '../../context/gameContext';
 import GameService from '../../services/games/games.service';
 import { GAME_SERVICE_ENDPOINTS } from '../../utilities/constants';
@@ -10,7 +10,7 @@ const { Option } = Select;
 
 function GameSelection() {
 
-  const { sportId, gameDate, sportsOptions, gamesMetadataArr } = useGameState();
+  const { sportId, sportsOptions, gamesMetadataArr } = useGameState();
   const { authenticated, token } = useAuthState();
 
   const gameDispatch = useGameDispatch();
