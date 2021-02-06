@@ -30,7 +30,7 @@ export const getGamesCountByDate = (current, gamesMetadata) => {
 /**
  * @function getDatePickerStyleByDate
  * determines how to style each calendar date in the DatePicker component. Red circle if there are unscored games today or in the past, green circle if all games have been scored, blue circle if the date is a future date
- * @param {Object} current 
+ * @param {String} current 
  * @param {Number} numGames 
  * @param {Number} numUnscoredGames 
  * @returns {Object} returns a style object used in the datepicker component
