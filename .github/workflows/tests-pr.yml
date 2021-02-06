@@ -19,8 +19,6 @@ jobs:
       run: git fetch origin master
     - name: Install dependencies
       run:  npm install
-    - name: Install Jest globally
-      run:  sudo npm install -g jest
     - name: Run Tests
       run:  npm run test
     - name: SonarCloud Scan
