@@ -39,16 +39,6 @@
       "last 1 safari version"
     ]
   },
-  "jest": {
-    "coverageReporters": [
-      "text-summary"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/serviceWorker.js",
-      "!src/setupTests.js"
-    ]
-  },
   "devDependencies": {
     "jest-sonar-reporter": "^2.0.0"
   }
