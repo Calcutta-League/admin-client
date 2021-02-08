@@ -16,7 +16,6 @@ function Topnav() {
 
   useEffect(() => {
     getCurrentSession().then(session => {
-      console.log(session);
       let token = session.idToken?.jwtToken;
       if (token !== undefined) {
         authDispatch({ type: 'update', key: 'token', value: token });

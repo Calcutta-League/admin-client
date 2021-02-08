@@ -1,7 +1,10 @@
 import React from 'react'
-import { fireEvent, render, screen, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'
+import { customRender, screen, cleanup } from './utilities/test-utils';
+import userEvent from '@testing-library/user-event';
 import App from './App';
+import { getCurrentSession, signOut } from './services/auth/auth.service';
+
+jest.mock('./services/auth/auth.service');
 
 afterEach(() => {
   cleanup();
@@ -9,13 +12,16 @@ afterEach(() => {
 });
 
 test('renders without crashing', () => {
-  render(<App />);
+  getCurrentSession.mockResolvedValueOnce({});
+  customRender(<App />, { provider: 'none' });
 });
 
 test('clicking signin should show the auth modal', () => {
-  render(<App />);
+  getCurrentSession.mockResolvedValueOnce({});
+  signOut.mockResolvedValueOnce({});
+  customRender(<App />, { provider: 'none' });
 
-  fireEvent.click(screen.getByTestId('signin'));
+  userEvent.click(screen.getByTestId('signin'));
 
-  expect(screen.getByText('Please Sign In')).toBeTruthy();
+  expect(screen.getByText('Please Sign In')).toBeInTheDocument();
 });

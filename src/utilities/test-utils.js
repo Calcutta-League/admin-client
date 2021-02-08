@@ -29,6 +29,8 @@ const AuthNavGameProviders = ({ children }) => {
 
 const customRender = (ui, options) => {
   switch (options.provider) {
+    case 'none':
+      return render(ui);
     case 'game':
       return render(ui, { wrapper: AuthNavGameProviders, ...options });
     default:
