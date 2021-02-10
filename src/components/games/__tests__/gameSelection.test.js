@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 test('calls api on authenticated mount', async () => {
-  customRender(<GameSelection />, { provider: 'game', authenticated: true });
+  customRender(<GameSelection />, { provider: 'game', authProps: { authenticated: true }});
   
   userEvent.click(screen.getByRole('combobox'));
   await waitFor(() => screen.getByText('Test Sport 1'));

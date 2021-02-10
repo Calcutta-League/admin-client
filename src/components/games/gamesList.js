@@ -149,13 +149,11 @@ function GamesList(props) {
     if (sportId && gameDate && authenticated) {
       // send API request
       setTableLoading(true);
-      console.log('request games for sportId: ' + sportId + ' on ' + gameDate);
       GameService.callApi(GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID, {
         token: token,
         sportId: sportId,
         gameDate: gameDate
       }).then(response => {
-        console.log(response);
         setTableLoading(false);
         setGames(response.data);
       }).catch(error => {

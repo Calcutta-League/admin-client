@@ -1,5 +1,5 @@
 import React from 'react'
-import { customRender, screen, cleanup } from './utilities/test-utils';
+import { customRender, screen, cleanup, render } from './utilities/test-utils';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { getCurrentSession, signOut } from './services/auth/auth.service';
@@ -13,13 +13,13 @@ afterEach(() => {
 
 test('renders without crashing', () => {
   getCurrentSession.mockResolvedValueOnce({});
-  customRender(<App />, { provider: 'none' });
+  render(<App />);
 });
 
 test('clicking signin should show the auth modal', () => {
   getCurrentSession.mockResolvedValueOnce({});
   signOut.mockResolvedValueOnce({});
-  customRender(<App />, { provider: 'none' });
+  render(<App />);
 
   userEvent.click(screen.getByTestId('signin'));
 

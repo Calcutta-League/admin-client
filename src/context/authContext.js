@@ -31,19 +31,16 @@ function authReducer(state, action) {
   }
 }
 
-function AuthProvider({children, authenticated}) {
-  let initialState = {};
-  if (authenticated === true) {
-    initialState = {
-      authenticated: true
-    };
-  }
+function AuthProvider(props) {
+  let initialState = {...props};
+  delete initialState.children;
+  
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   return (
     <AuthStateContext.Provider value={state}>
       <AuthDispatchContext.Provider value={dispatch}>
-        {children}
+        {props.children}
       </AuthDispatchContext.Provider>
     </AuthStateContext.Provider>
   );

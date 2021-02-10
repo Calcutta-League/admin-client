@@ -52,14 +52,16 @@ function clearNavStorage() {
   calcuttaStore('clear', 'navContext');
 }
 
-function NavProvider({children}) {
+function NavProvider(props) {
+  let initialState = {...props};
+  delete initialState.children;
   // initialize state from localstorage
   const [state, dispatch] = useReducer(navReducer, getNavStorage());
 
   return (
     <NavStateContext.Provider value={state}>
       <NavDispatchContext.Provider value={dispatch}>
-        {children}
+        {props.children}
       </NavDispatchContext.Provider>
     </NavStateContext.Provider>
   );
