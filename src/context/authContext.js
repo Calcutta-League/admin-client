@@ -31,8 +31,14 @@ function authReducer(state, action) {
   }
 }
 
-function AuthProvider({children}) {
-  const [state, dispatch] = useReducer(authReducer, {});
+function AuthProvider({children, authenticated}) {
+  let initialState = {};
+  if (authenticated === true) {
+    initialState = {
+      authenticated: true
+    };
+  }
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   return (
     <AuthStateContext.Provider value={state}>

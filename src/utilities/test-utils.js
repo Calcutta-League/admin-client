@@ -17,7 +17,7 @@ const AuthNavProviders = ({ children }) => {
 
 const AuthNavGameProviders = ({ children }) => {
   return (
-    <AuthProvider>
+    <AuthProvider authenticated={true}>
       <NavProvider>
         <GameProvider>
           {children}
@@ -35,7 +35,7 @@ const customRender = (ui, options) => {
       return render(ui, { wrapper: AuthNavGameProviders, ...options });
     default:
       return render(ui, { wrapper: AuthNavProviders, ...options });
-  } 
+  }
 }
 
 // re-export everything

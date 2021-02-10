@@ -2,8 +2,6 @@ import { GAME_SERVICE_ENDPOINTS } from '../../utilities/constants';
 
 export const gameEndpoints = {
   getSportOptions: function(apiService, params) {
-    console.log('getSportOptions call');
-    console.log(params);
     let options = {
       method: 'GET',
       url: GAME_SERVICE_ENDPOINTS.GET_SPORT_OPTIONS
