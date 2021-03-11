@@ -25,6 +25,7 @@ function GamesList(props) {
       render: (text, record) => {
         return (
           <InputNumber
+            data-testid={`${record.GameId}_team1`}
             size='small'
             min={0}
             max={1000}
@@ -54,6 +55,7 @@ function GamesList(props) {
       render: (text, record) => {
         return (
           <InputNumber
+            data-testid={`${record.GameId}_team2`}
             size='small'
             min={0}
             max={1000}
