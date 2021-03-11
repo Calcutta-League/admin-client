@@ -25,6 +25,7 @@ function GamesList(props) {
       render: (text, record) => {
         return (
           <InputNumber
+            data-testid={`${record.GameId}_team1`}
             size='small'
             min={0}
             max={1000}
@@ -54,6 +55,7 @@ function GamesList(props) {
       render: (text, record) => {
         return (
           <InputNumber
+            data-testid={`${record.GameId}_team2`}
             size='small'
             min={0}
             max={1000}
@@ -149,13 +151,11 @@ function GamesList(props) {
     if (sportId && gameDate && authenticated) {
       // send API request
       setTableLoading(true);
-      console.log('request games for sportId: ' + sportId + ' on ' + gameDate);
       GameService.callApi(GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID, {
         token: token,
         sportId: sportId,
         gameDate: gameDate
       }).then(response => {
-        console.log(response);
         setTableLoading(false);
         setGames(response.data);
       }).catch(error => {

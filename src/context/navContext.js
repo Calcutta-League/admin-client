@@ -5,7 +5,6 @@ const NavStateContext = createContext()
 const NavDispatchContext = createContext()
 
 function navReducer(state, action) {
-  console.log(action);
   switch (action.type) {
     case 'update': {
       setNavStorage(state, action);
@@ -45,7 +44,6 @@ function setNavStorage(state, action) {
  */
 function getNavStorage() {
   let contextState = calcuttaStore('get', 'navContext');
-  console.log(contextState);
 
   return contextState === null ? {} : contextState;
 }
@@ -54,14 +52,16 @@ function clearNavStorage() {
   calcuttaStore('clear', 'navContext');
 }
 
-function NavProvider({children}) {
+function NavProvider(props) {
+  let initialState = {...props};
+  delete initialState.children;
   // initialize state from localstorage
   const [state, dispatch] = useReducer(navReducer, getNavStorage());
 
   return (
     <NavStateContext.Provider value={state}>
       <NavDispatchContext.Provider value={dispatch}>
-        {children}
+        {props.children}
       </NavDispatchContext.Provider>
     </NavStateContext.Provider>
   );
