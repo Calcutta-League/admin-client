@@ -5,5 +5,6 @@ export const API_CONFIG = {
 export const GAME_SERVICE_ENDPOINTS = {
   GET_SPORT_OPTIONS: '/getSportOptions',
   GET_GAMES_BY_SPORT_ID: '/getGamesBySportId',
-  UPDATE_SCORES: '/updateScores'
+  UPDATE_SCORES: '/updateScores',
+  GET_GAMES_METADATA: '/getGamesMetadata'
 };

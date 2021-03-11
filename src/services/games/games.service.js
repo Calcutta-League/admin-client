@@ -22,5 +22,6 @@ var GameService = (function() {
 GameService.newEndpoint(GAME_SERVICE_ENDPOINTS.GET_SPORT_OPTIONS, gameEndpoints.getSportOptions);
 GameService.newEndpoint(GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID, gameEndpoints.getGamesBySportId);
 GameService.newEndpoint(GAME_SERVICE_ENDPOINTS.UPDATE_SCORES, gameEndpoints.updateScores);
+GameService.newEndpoint(GAME_SERVICE_ENDPOINTS.GET_GAMES_METADATA, gameEndpoints.getGamesMetadata);
 
 export default GameService;

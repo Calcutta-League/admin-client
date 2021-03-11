@@ -20,13 +20,16 @@ function gameReducer(state, action) {
   }
 }
 
-function GameProvider({children}) {
-  const [state, dispatch] = useReducer(gameReducer, {});
+function GameProvider(props) {
+  let initialState = {...props};
+  delete initialState.children;
+
+  const [state, dispatch] = useReducer(gameReducer, initialState);
 
   return (
     <GameStateContext.Provider value={state}>
       <GameDispatchContext.Provider value={dispatch}>
-        {children}
+        {props.children}
       </GameDispatchContext.Provider>
     </GameStateContext.Provider>
   );

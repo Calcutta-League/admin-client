@@ -4,12 +4,13 @@ import { useGameState, useGameDispatch } from '../../context/gameContext';
 import GameService from '../../services/games/games.service';
 import { GAME_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
+import { getDatePickerStyleByDate, getGamesCountByDate } from './helper';
 
 const { Option } = Select;
 
 function GameSelection() {
 
-  const { sportId, gameDate, sportsOptions } = useGameState();
+  const { sportId, sportsOptions, gamesMetadataArr } = useGameState();
   const { authenticated, token } = useAuthState();
 
   const gameDispatch = useGameDispatch();
@@ -53,7 +54,21 @@ function GameSelection() {
           <Select style={{ width: '280px', margin: '0 12px' }} value={sportId} onChange={handleSportSelection}>
             {generateOptions()}
           </Select>
-          <DatePicker style={{ width: '280px', margin: '0 12px', justifyContent: 'center' }} onChange={handleDateSelection} />
+          <DatePicker 
+            style={{ width: '280px', margin: '0 12px', justifyContent: 'center' }}
+            onChange={handleDateSelection}
+            dateRender={(current) => {
+              let [numGames, numUnscoredGames] = getGamesCountByDate(current.format('YYYY-MM-DD'), gamesMetadataArr);
+
+              let style = getDatePickerStyleByDate(current.format('YYYY-MM-DD'), numGames, numUnscoredGames);
+
+              return (
+                <div className="ant-picker-cell-inner" style={style}>
+                  {current.date()}
+                </div>
+              );
+            }}
+          />
         </Col>
       </Row>
     </Input.Group>

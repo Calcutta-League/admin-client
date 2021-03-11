@@ -63,6 +63,7 @@ function AuthModal() {
       maskClosable={true}
       footer={null}
       style={{ maxWidth: '480px' }}
+      title='Please Sign In'
     >
       <Form
         {...layout}
