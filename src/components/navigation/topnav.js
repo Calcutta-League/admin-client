@@ -16,16 +16,16 @@ function Topnav() {
 
   useEffect(() => {
     getCurrentSession().then(session => {
-      console.log(session);
       let token = session.idToken?.jwtToken;
       if (token !== undefined) {
         authDispatch({ type: 'update', key: 'token', value: token });
       }
+    }).catch(error => {
+      console.log(error);
     });
   }, []);
 
   const handleMenuClick = (event) => {
-    console.log(event);
     if (event.key == 'signin') {
       navDispatch({ type: 'update', key: 'authModalVisible', value: true });
     } else if (event.key == 'signout') {
@@ -38,18 +38,17 @@ function Topnav() {
   }
 
   const generateAuthMenu = () => {
-    console.log(!!authenticated);
     if (!!authenticated) {
       return (
-        <SubMenu icon={<SettingOutlined />} title='My Account' style={{ float: 'right' }}>
-          <Menu.Item key='signout' style={{ marginLeft: 'auto' }}>
+        <SubMenu icon={<SettingOutlined />} title='My Account' style={{ float: 'right' }} data-testid='myaccount'>
+          <Menu.Item key='signout' style={{ marginLeft: 'auto' }} data-testid='signout'>
             Sign out
           </Menu.Item>
         </SubMenu>
       );
     } else {
       return (
-        <Menu.Item key='signin' style={{ float: 'right' }}>
+        <Menu.Item key='signin' style={{ float: 'right' }} data-testid='signin'>
           Sign In
         </Menu.Item>
       );
@@ -63,7 +62,7 @@ function Topnav() {
       selectable={false}
       onClick={handleMenuClick}
     >
-      <Menu.Item key='brand' style={{ fontSize: '32px' }}>
+      <Menu.Item key='brand' style={{ fontSize: '32px' }} data-testid='brand'>
         Admin
       </Menu.Item>
       {generateAuthMenu()}

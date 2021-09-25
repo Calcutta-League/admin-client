@@ -2,8 +2,6 @@ import { GAME_SERVICE_ENDPOINTS } from '../../utilities/constants';
 
 export const gameEndpoints = {
   getSportOptions: function(apiService, params) {
-    console.log('getSportOptions call');
-    console.log(params);
     let options = {
       method: 'GET',
       url: GAME_SERVICE_ENDPOINTS.GET_SPORT_OPTIONS
@@ -20,6 +18,19 @@ export const gameEndpoints = {
     let options = {
       method: 'GET',
       url: `${GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID}/${params.sportId}/${params.gameDate}`
+    };
+
+    if (params.token !== undefined) {
+      options.headers = { 'x-cognito-token': params.token };
+    }
+
+    return apiService(options);
+  },
+
+  getGamesMetadata: function(apiService, params) {
+    let options = {
+      method: 'GET',
+      url: `${GAME_SERVICE_ENDPOINTS.GET_GAMES_METADATA}/${params.sportId}/${params.searchDate}`
     };
 
     if (params.token !== undefined) {

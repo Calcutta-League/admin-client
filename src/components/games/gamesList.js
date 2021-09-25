@@ -25,6 +25,7 @@ function GamesList(props) {
       render: (text, record) => {
         return (
           <InputNumber
+            data-testid={`${record.GameId}_team1`}
             size='small'
             min={0}
             max={1000}
@@ -54,6 +55,7 @@ function GamesList(props) {
       render: (text, record) => {
         return (
           <InputNumber
+            data-testid={`${record.GameId}_team2`}
             size='small'
             min={0}
             max={1000}
@@ -138,19 +140,22 @@ function GamesList(props) {
 
   useEffect(() => {
     requestGames();
+
+    // add logic to request new metadata when the search date gets to a new point
+    if (!!authenticated) {
+      getGamesMetadata();
+    }
   }, [sportId, gameDate, authenticated]);
 
   const requestGames = () => {
     if (sportId && gameDate && authenticated) {
       // send API request
       setTableLoading(true);
-      console.log('request games for sportId: ' + sportId + ' on ' + gameDate);
       GameService.callApi(GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID, {
         token: token,
         sportId: sportId,
         gameDate: gameDate
       }).then(response => {
-        console.log(response);
         setTableLoading(false);
         setGames(response.data);
       }).catch(error => {
@@ -158,6 +163,22 @@ function GamesList(props) {
         console.log(error);
       });
     }
+  }
+
+  const getGamesMetadata = () => {
+    let searchDate = new Date();
+    let dateString = `${searchDate.getFullYear()}-${searchDate.getMonth() + 1}-${searchDate.getDate()}`;
+
+    GameService.callApi(GAME_SERVICE_ENDPOINTS.GET_GAMES_METADATA, {
+      token: token,
+      sportId: sportId,
+      searchDate: dateString
+    }).then(response => {
+      console.log(response);
+      gameDispatch({ type: 'update', key: 'gamesMetadataArr', value: response.data });
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   const scoreChange = ({ gameId, score, isHome }) => {
