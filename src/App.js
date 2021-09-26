@@ -9,6 +9,7 @@ import Games from './components/games/games';
 import Topnav from './components/navigation/topnav';
 import { AuthProvider } from './context/authContext';
 import AuthModal from './components/modals/authModal';
+import Tournaments from './components/tournaments/tournaments';
 
 const { Header, Content } = Layout;
 
@@ -29,6 +30,7 @@ function App() {
                 <Content>
                   <Router>
                     <Games path='/games' />
+                    <Tournaments path='/tournaments' />
                     {/* <Sports path='/sports' />
                     <Tournaments path='/tournaments' />
                     <Leagues path='/leagues' />

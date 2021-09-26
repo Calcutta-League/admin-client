@@ -12,7 +12,7 @@ const gameData = [
 ];
 
 const server = setupServer(
-  rest.get(API_CONFIG.BASE_URL + GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID + '/:sportId/:gameDate', (req, res, ctx) => {
+  rest.get(API_CONFIG.GAME_SERVICE_BASE_URL + GAME_SERVICE_ENDPOINTS.GET_GAMES_BY_SPORT_ID + '/:sportId/:gameDate', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json(gameData
@@ -20,7 +20,7 @@ const server = setupServer(
     );
   }),
 
-  rest.post(API_CONFIG.BASE_URL + GAME_SERVICE_ENDPOINTS.UPDATE_SCORES, (req, res, ctx) => {
+  rest.post(API_CONFIG.GAME_SERVICE_BASE_URL + GAME_SERVICE_ENDPOINTS.UPDATE_SCORES, (req, res, ctx) => {
 
   })
 );
