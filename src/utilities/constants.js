@@ -11,5 +11,9 @@ export const GAME_SERVICE_ENDPOINTS = {
 };
 
 export const TOURNAMENT_SERVICE_ENDPOINTS = {
-  GET_TOURNAMENTS: '/getTournaments'
+  GET_TOURNAMENTS: '/getTournaments',
+  GET_TOURNAMENT_METADATA: '/getTournamentMetadata',
+  GET_TOURNAMENT_PHASES: '/getTournamentPhases',
+  GET_TOURNAMENT_REGIMES: '/getTournamentRegimes',
+  GET_TOURNAMENT_REGIME_PHASES: '/getTournamentRegimePhases'
 };

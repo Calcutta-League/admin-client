@@ -20,5 +20,9 @@ var TournamentService = (function() {
  * Adding each tournament service endpoint to the TournamentService instance
  */
 TournamentService.newEndpoint(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENTS, tournamentEndpoints.getTournaments);
+TournamentService.newEndpoint(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_METADATA, tournamentEndpoints.getTournamentMetadata);
+TournamentService.newEndpoint(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_PHASES, tournamentEndpoints.getTournamentPhases);
+TournamentService.newEndpoint(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIMES, tournamentEndpoints.getTournamentRegimes);
+TournamentService.newEndpoint(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_PHASES, tournamentEndpoints.getTournamentRegimePhases);
 
 export default TournamentService;

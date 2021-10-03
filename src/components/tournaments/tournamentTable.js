@@ -5,6 +5,7 @@ import { useTournamentDispatch, useTournamentState } from '../../context/tournam
 import TournamentService from '../../services/tournament/tournament.service';
 import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
+import { navigate } from '@reach/router';
 
 const { Column } = Table;
 
@@ -38,6 +39,10 @@ function TournamentTable() {
     });
   }
 
+  const tournamentClicked = (tournament) => {
+    navigate(`/tournaments/${tournament.TournamentId}`);
+  }
+
   return (
     <Row justify='center'>
       <Col lg={24} xl={20} xxl={16}>
@@ -45,6 +50,11 @@ function TournamentTable() {
           dataSource={tournaments}
           loading={tableLoading}
           pagination={false}
+          onRow={(record) => {
+            return {
+              onClick: () => { tournamentClicked(record) }
+            }
+          }}
           rowKey='TournamentId'
           size='small'
         >
