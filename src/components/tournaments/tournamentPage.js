@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Divider, Layout, Table, Switch, Card } from 'antd';
+import { Row, Col, Typography, Divider, Layout, Table, Switch, Card, Button } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
 import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
+import { navigate } from '@reach/router';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -111,6 +112,22 @@ function TournamentPage(props) {
     // TODO: implement
   }
 
+  const deletePhase = (phaseId) => {
+    console.log(phaseId);
+    // TODO: display warning popup
+    // 1. flips table loading flag
+    // 2. calls delete endpoint
+    // 3. calls fetchPhases()
+  }
+
+  const newTournamentPhase = () => {
+    // TODO: implement
+  }
+
+  const newTournamentRegime = () => {
+    // TODO: implement
+  }
+
   const regimeAdminFlagChanged = (value, event) => {
     event.stopPropagation();
     // TODO: implement
@@ -127,6 +144,10 @@ function TournamentPage(props) {
     }
     
     setSelectedRegimeId(regime.TournamentRegimeId);
+  }
+
+  const navigateToRegimePage = (tournamentRegimeId) => {
+    navigate(`/tournamentRegime/${tournamentRegimeId}`);
   }
 
   const getRowClass = (record) => {
@@ -185,9 +206,33 @@ function TournamentPage(props) {
               dataIndex='Status'
               title='Status'
             />
+            <Column
+              align='right'
+              render={(text, record) => {
+                return (
+                  <Button
+                    type='primary'
+                    danger
+                    size='small'
+                    onClick={() => { deletePhase(record.TournamentPhaseId) }}
+                  >
+                    Delete
+                  </Button>
+                )
+              }}
+            />
           </Table>
-          {/* Add Phase Button */}
         </Col>
+      </Row>
+      <Row justify='center'>
+        <Button
+          type='primary'
+          size='small'
+          onClick={newTournamentPhase}
+          style={{ marginTop: 12 }}
+        >
+          New Phase
+        </Button>
       </Row>
       <Row justify='center'>
         <Col span={20}>
@@ -229,9 +274,40 @@ function TournamentPage(props) {
                 return <Switch defaultChecked={checked} onChange={regimeDisabledFlagChanged} />
               }}
             />
+            <Column
+              align='center'
+              title='Setup Status'
+            />
+            <Column
+              align='right'
+              title='Tournament Slots'
+              render={(text, record) => {
+                return (
+                  <Button
+                    type='primary'
+                    size='small'
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      navigateToRegimePage(record.TournamentRegimeId)
+                    }}
+                  >
+                    Add/Edit
+                  </Button>
+                );
+              }}
+            />
           </Table>
-          {/* Add Regime Button */}
         </Col>
+      </Row>
+      <Row justify='center'>
+        <Button
+          type='primary'
+          size='small'
+          onClick={newTournamentRegime}
+          style={{ marginTop: 12 }}
+        >
+          New Regime
+        </Button>
       </Row>
       <Row justify='center'>
         <Col span={20}>

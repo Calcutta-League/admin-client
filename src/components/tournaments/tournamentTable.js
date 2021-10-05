@@ -55,6 +55,7 @@ function TournamentTable() {
               onClick: () => { tournamentClicked(record) }
             }
           }}
+          rowClassName='row-clickable'
           rowKey='TournamentId'
           size='small'
         >

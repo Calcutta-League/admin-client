@@ -11,6 +11,7 @@ import { AuthProvider } from './context/authContext';
 import AuthModal from './components/modals/authModal';
 import Tournaments from './components/tournaments/tournaments';
 import TournamentPage from './components/tournaments/tournamentPage';
+import TournamentRegimePage from './components/tournaments/tournamentRegimePage';
 
 const { Header, Content } = Layout;
 
@@ -33,6 +34,7 @@ function App() {
                     <Games path='/games' />
                     <Tournaments path='/tournaments' />
                     <TournamentPage path='/tournaments/:tournamentId' />
+                    <TournamentRegimePage path='/tournamentRegime/:tournamentRegimeId' />
                     {/* <Sports path='/sports' />
                     <Tournaments path='/tournaments' />
                     <Leagues path='/leagues' />
