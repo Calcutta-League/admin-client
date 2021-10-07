@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Divider, Layout, Table, Switch, Card, Button } from 'antd';
+import { Row, Col, Typography, Divider, Layout, Table, Switch, Card, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
 import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
@@ -105,11 +105,13 @@ function TournamentPage(props) {
   const tournamentAdminOnlyChanged = (value) => {
     setAdminOnly(value);
     // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const tournamentDisabledChanged = (value) => {
     setDisabled(value);
     // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const deletePhase = (phaseId) => {
@@ -118,24 +120,29 @@ function TournamentPage(props) {
     // 1. flips table loading flag
     // 2. calls delete endpoint
     // 3. calls fetchPhases()
+    message.error('Not Implemented Yet');
   }
 
   const newTournamentPhase = () => {
     // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const newTournamentRegime = () => {
     // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const regimeAdminFlagChanged = (value, event) => {
     event.stopPropagation();
     // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const regimeDisabledFlagChanged = (value, event) => {
     event.stopPropagation();
     // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const regimeSelected = (regime) => {
@@ -148,6 +155,11 @@ function TournamentPage(props) {
 
   const navigateToRegimePage = (tournamentRegimeId) => {
     navigate(`/tournamentRegime/${tournamentRegimeId}`);
+  }
+
+  const removePhaseFromRegime = (tournamentRegimeId, tournamentPhaseId) => {
+    // TODO: implement
+    message.error('Not Implemented Yet');
   }
 
   const getRowClass = (record) => {
@@ -328,6 +340,24 @@ function TournamentPage(props) {
               align='center'
               dataIndex='Status'
               title='Status'
+            />
+            <Column
+              align='right'
+              render={(text, record) => {
+                return (
+                  <Button
+                    type='primary'
+                    size='small'
+                    danger
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      removePhaseFromRegime(record.TournamentRegimeId, record.TournamentPhaseId);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                )
+              }}
             />
           </Table>
           {/* Add RegimePhase Button */}

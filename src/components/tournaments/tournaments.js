@@ -27,7 +27,6 @@ function Tournaments() {
   return (
     <TournamentProvider>
       <TournamentTable />
-      {/* New tournament button */}
       <Row justify='center'>
         <Button
           type='primary'
