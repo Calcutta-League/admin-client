@@ -146,8 +146,8 @@ function TournamentPage(props) {
     setSelectedRegimeId(regime.TournamentRegimeId);
   }
 
-  const navigateToRegimePage = (tournamentRegimeId) => {
-    navigate(`/tournamentRegime/${tournamentRegimeId}`);
+  const navigateToRegimePage = (tournamentRegimeId, tournamentRegimeName) => {
+    navigate(`/tournamentRegime/${tournamentRegimeId}`, { state: { tournamentRegimeName: tournamentRegimeName } });
   }
 
   const getRowClass = (record) => {
@@ -288,7 +288,7 @@ function TournamentPage(props) {
                     size='small'
                     onClick={(event) => {
                       event.stopPropagation()
-                      navigateToRegimePage(record.TournamentRegimeId)
+                      navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
                     }}
                   >
                     Add/Edit
