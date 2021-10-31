@@ -22,15 +22,12 @@ function TournamentRegimePage(props) {
   useEffect(() => {
     if (!!authenticated) {
       fetchMetadata();
+      fetchSlots();
     }
   }, [authenticated]);
-  
-  // need two GET endpoints:
-    // metadata
-    // slots
 
   const fetchMetadata = () => {
-    let regimeId = props.tournamentRegimeId;
+    const regimeId = props.tournamentRegimeId;
 
     TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_METADATA, { tournamentRegimeId: regimeId, token: token }).then(res => {
       let data = res.data;
@@ -43,8 +40,8 @@ function TournamentRegimePage(props) {
         setAdminOnly(adminOnly);
         setDisabled(disabled);
         setSlotCount(slotCount);
-        setMetadataLoading(false);
       }
+      setMetadataLoading(false);
     }).catch(error => {
       console.log(error);
       setMetadataLoading(false);
@@ -52,7 +49,19 @@ function TournamentRegimePage(props) {
   }
 
   const fetchSlots = () => {
+    const regimeId = props.tournamentRegimeId;
 
+    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_SLOTS, { tournamentRegimeId: regimeId, token: token }).then(res => {
+      const data = res.data;
+
+      if (data.length > 0) {
+        setRegimeSlots(data);
+      }
+      setRegimeSlotsLoading(false);
+    }).catch(error => {
+      console.log(error);
+      setMetadataLoading(false);
+    })
   }
 
   // need five POST endpoints:

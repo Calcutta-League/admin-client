@@ -17,7 +17,8 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   GET_TOURNAMENT_PHASES: '/getTournamentPhases',
   GET_TOURNAMENT_REGIMES: '/getTournamentRegimes',
   GET_TOURNAMENT_REGIME_PHASES: '/getTournamentRegimePhases',
-  GET_TOURNAMENT_REGIME_METADATA: '/getTournamentRegimeMetadata'
+  GET_TOURNAMENT_REGIME_METADATA: '/getTournamentRegimeMetadata',
+  GET_TOURNAMENT_REGIME_SLOTS: '/getTournamentRegimeSlots'
 };
 
 export const SPORTS_SERVICE_ENDPOINTS = {

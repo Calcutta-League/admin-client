@@ -52,8 +52,8 @@ function TournamentPage(props) {
         setName(name);
         setAdminOnly(adminOnly);
         setDisabled(disabled);
-        setMetadataLoading(false);
       }
+      setMetadataLoading(false);
     }).catch(error => {
       console.log(error);
       setMetadataLoading(false);
