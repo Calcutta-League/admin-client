@@ -52,8 +52,8 @@ function TournamentPage(props) {
         setName(name);
         setAdminOnly(adminOnly);
         setDisabled(disabled);
-        setMetadataLoading(false);
       }
+      setMetadataLoading(false);
     }).catch(error => {
       console.log(error);
       setMetadataLoading(false);
@@ -153,8 +153,8 @@ function TournamentPage(props) {
     setSelectedRegimeId(regime.TournamentRegimeId);
   }
 
-  const navigateToRegimePage = (tournamentRegimeId) => {
-    navigate(`/tournamentRegime/${tournamentRegimeId}`);
+  const navigateToRegimePage = (tournamentRegimeId, tournamentRegimeName) => {
+    navigate(`/tournamentRegime/${tournamentRegimeId}`, { state: { tournamentRegimeName: tournamentRegimeName } });
   }
 
   const removePhaseFromRegime = (tournamentRegimeId, tournamentPhaseId) => {
@@ -300,7 +300,7 @@ function TournamentPage(props) {
                     size='small'
                     onClick={(event) => {
                       event.stopPropagation()
-                      navigateToRegimePage(record.TournamentRegimeId)
+                      navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
                     }}
                   >
                     Add/Edit

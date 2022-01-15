@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, Select, Divider } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, Select, Divider, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import SportsService from '../../services/sports/sports.service';
+import { SPORTS_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { useAuthState } from '../../context/authContext';
 
 const { Option } = Select;
 
@@ -30,6 +33,29 @@ const addFieldLayout = {
 function NewTournamentForm(props) {
 
   const [newTournamentLoading, setNewTournamentLoading] = useState(false);
+  const [sportsListLoading, setSportsListLoading] = useState(true);
+  const [sports, setSports] = useState([]);
+
+  const { authenticated, token } = useAuthState();
+
+  useEffect(() => {
+    if (!!authenticated) {
+      fetchSports();
+    }
+  }, [authenticated]);
+
+  const fetchSports = () => {
+    SportsService.callApi(SPORTS_SERVICE_ENDPOINTS.GET_SPORTS, { token: token }).then(res => {
+      let data = res.data;
+      console.log(data);
+      setSports(data);
+      setSportsListLoading(false);
+    }).catch(error => {
+      console.log(error);
+      message.error('Error downloading sports');
+      setSportsListLoading(false);
+    });
+  }
 
   const createNewTournament = (values) => {
     // collect form fields and send create request
@@ -40,13 +66,15 @@ function NewTournamentForm(props) {
   }
 
   const generateSportOptions = () => {
-    let sports = ['MLB', 'NFL'];
+    if (sports && sports.length > 0) {
+      return sports.map(sport => {
+        return (
+          <Option value={sport.SportId}>{sport.Abbreviation}</Option>
+        );
+      });
+    }
 
-    return sports.map((sport, index) => {
-      return (
-        <Option value={index}>{sport}</Option>
-      );
-    });
+    return null;
   }
 
   return (
@@ -70,6 +98,7 @@ function NewTournamentForm(props) {
       >
         <Select
           placeholder='Choose a sport'
+          loading={sportsListLoading}
         >
           {generateSportOptions()}
         </Select>

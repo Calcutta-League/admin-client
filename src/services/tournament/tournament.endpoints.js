@@ -64,5 +64,31 @@ export const tournamentEndpoints = {
     }
 
     return apiService(options);
+  },
+
+  getTournamentRegimeMetadata: function(apiService, params) {
+    let options = {
+      method: 'GET',
+      url: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_METADATA}/${params.tournamentRegimeId}`
+    }
+
+    if (params.token !== undefined) {
+      options.headers = { 'x-cognito-token': params.token }
+    }
+
+    return apiService(options);
+  },
+
+  getTournamentRegimeSlots: function(apiService, params) {
+    let options = {
+      method: 'GET',
+      url: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_SLOTS}/${params.tournamentRegimeId}`
+    }
+
+    if (params.token !== undefined) {
+      options.headers = { 'x-cognito-token': params.token }
+    }
+
+    return apiService(options);
   }
 }
