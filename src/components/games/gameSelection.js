@@ -30,7 +30,7 @@ function GameSelection() {
   }
 
   const generateOptions = () => {
-    if (sportsOptions !== undefined) {
+    if (sportsOptions != undefined && sportsOptions.length > 0) {
       const options = sportsOptions.map(sport => {
         return <Option value={sport.id} key={sport.id}>{sport.name}</Option>;
       });

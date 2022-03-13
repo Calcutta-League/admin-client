@@ -7,7 +7,7 @@ import GameSelection from '../gameSelection';
 import { API_CONFIG, GAME_SERVICE_ENDPOINTS } from '../../../utilities/constants';
 
 const server = setupServer(
-  rest.get(API_CONFIG.BASE_URL + GAME_SERVICE_ENDPOINTS.GET_SPORT_OPTIONS, (req, res, ctx) => {
+  rest.get(API_CONFIG.GAME_SERVICE_BASE_URL + GAME_SERVICE_ENDPOINTS.GET_SPORT_OPTIONS, (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json([
