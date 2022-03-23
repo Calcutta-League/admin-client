@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Button, Modal, Row } from 'antd';
 import 'antd/dist/antd.css';
 import { TournamentProvider } from '../../context/tournamentContext';
 import TournamentTable from './tournamentTable';
 import NewTournamentForm from './newTournamentForm';
 import './tournamentStyle.css';
+import { navigate } from '@reach/router';
 
 function Tournaments() {
 
@@ -22,10 +23,11 @@ function Tournaments() {
     setModalVisible(false);
 
     // navigate to the new tournament's page
+    navigate(`tournaments/${newTournamentId}`);
   }
 
   return (
-    <TournamentProvider>
+    <Fragment>
       <TournamentTable />
       <Row justify='center'>
         <Button
@@ -45,7 +47,7 @@ function Tournaments() {
       >
         <NewTournamentForm continue={continueTournamentCreation} />
       </Modal>
-    </TournamentProvider>
+    </Fragment>
   );
 }
 

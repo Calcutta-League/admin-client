@@ -26,11 +26,7 @@ function AuthModal() {
   const onFinish = (values) => {
     setLoading(true);
 
-    console.log(values);
-
     signIn(values.email, values.password).then(response => {
-      console.log(response);
-      
       if (response.token !== undefined) {
         authDispatch({ type: 'update', key: 'token', value: response.token });
       }

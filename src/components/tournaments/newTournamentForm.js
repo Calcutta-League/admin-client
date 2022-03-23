@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Divider, message } from 'antd';
+import { Button, Form, Input, Select, Divider, message, Checkbox } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import SportsService from '../../services/sports/sports.service';
-import { SPORTS_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { SPORTS_SERVICE_ENDPOINTS, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
+import TournamentService from '../../services/tournament/tournament.service';
 
 const { Option } = Select;
 
@@ -62,14 +63,27 @@ function NewTournamentForm(props) {
     setNewTournamentLoading(true);
     console.log(values);
 
-    // call props.continue and pass in the new tournament's id
+    const body = {
+      tournamentName: values.tournamentName,
+      adminOnly: !!values.adminOnly,
+      sportId: values.sport,
+      phases: values.phases
+    }
+
+    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.NEW_TOURNAMENT, { token: token, data: body }).then(res => {
+      console.log(res);
+      setNewTournamentLoading(false);
+      props.continue(res.data[0].NewTournamentId);
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   const generateSportOptions = () => {
     if (sports && sports.length > 0) {
       return sports.map(sport => {
         return (
-          <Option value={sport.SportId}>{sport.Abbreviation}</Option>
+          <Option key={sport.SportId} value={sport.SportId}>{sport.Abbreviation}</Option>
         );
       });
     }
@@ -104,10 +118,11 @@ function NewTournamentForm(props) {
         </Select>
       </Form.Item>
       <Form.Item
-        label='Admin Only'
         name='adminOnly'
+        valuePropName='checked'
+        wrapperCol={{ offset: 6, span: 16 }}
       >
-        <Input type='checkbox' />
+        <Checkbox>Admin Only</Checkbox>
       </Form.Item>
       <Divider orientation='left'>Tournament Phases</Divider>
       <Form.List

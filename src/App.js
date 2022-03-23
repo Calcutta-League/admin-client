@@ -12,6 +12,7 @@ import AuthModal from './components/modals/authModal';
 import Tournaments from './components/tournaments/tournaments';
 import TournamentPage from './components/tournaments/tournamentPage';
 import TournamentRegimePage from './components/tournaments/tournamentRegimePage';
+import { TournamentProvider } from './context/tournamentContext';
 
 const { Header, Content } = Layout;
 
@@ -32,9 +33,11 @@ function App() {
                 <Content>
                   <Router>
                     <Games path='/games' />
-                    <Tournaments path='/tournaments' />
-                    <TournamentPage path='/tournaments/:tournamentId' />
-                    <TournamentRegimePage path='/tournamentRegime/:tournamentRegimeId' />
+                    <TournamentProvider path='/tournaments'>
+                      <Tournaments path='/' />
+                      <TournamentPage path='/:tournamentId' />
+                      <TournamentRegimePage path='/tournamentRegime/:tournamentRegimeId' />
+                    </TournamentProvider>
                     {/* <Sports path='/sports' />
                     <Tournaments path='/tournaments' />
                     <Leagues path='/leagues' />

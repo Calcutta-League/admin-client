@@ -90,5 +90,22 @@ export const tournamentEndpoints = {
     }
 
     return apiService(options);
+  },
+
+  newTournament: function(apiService, params) {
+    const options = {
+      method: 'POST',
+      url: TOURNAMENT_SERVICE_ENDPOINTS.NEW_TOURNAMENT
+    };
+
+    if (params.token !== undefined) {
+      options.headers = { 'x-cognito-token': params.token }
+    }
+
+    if (params.data !== undefined && typeof params.data == 'object') {
+      options.data = params.data;
+    }
+
+    return apiService(options);
   }
 }
