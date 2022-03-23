@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Layout, Switch, Card, Button, message } from 'antd';
+import { Row, Col, Divider, Typography, Layout, Switch, Card, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
 import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
@@ -68,6 +68,11 @@ function TournamentPage(props) {
     message.error('Not Implemented Yet');
   }
 
+  const newTournamentRegimePhase = () => {
+    // TODO: implement
+    message.error('Not Implemented Yet');
+  }
+
   return (
     <Content>
       <Row justify='center'>
@@ -97,7 +102,12 @@ function TournamentPage(props) {
           </Card>
         </Col>
       </Row>
-      <TournamentPhaseTable tournamentId={props.tournamentId} />
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Tournament Phases</Divider>
+          <TournamentPhaseTable tournamentId={props.tournamentId} />
+        </Col>
+      </Row>
       <Row justify='center'>
         <Button
           type='primary'
@@ -108,7 +118,12 @@ function TournamentPage(props) {
           New Phase
         </Button>
       </Row>
-      <TournamentRegimeTable tournamentId={props.tournamentId} />
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Tournament Regimes</Divider>
+          <TournamentRegimeTable tournamentId={props.tournamentId} />
+        </Col>
+      </Row>
       <Row justify='center'>
         <Button
           type='primary'
@@ -119,7 +134,22 @@ function TournamentPage(props) {
           New Regime
         </Button>
       </Row>
-      <TournamentRegimePhaseTable />
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Tournament Regime Phases</Divider>
+          <TournamentRegimePhaseTable />
+        </Col>
+      </Row>
+      <Row justify='center'>
+        <Button
+          type='primary'
+          size='small'
+          onClick={newTournamentRegimePhase}
+          style={{ marginTop: 12 }}
+        >
+          New Regime Phase
+        </Button>
+      </Row>
     </Content>
   );
 }

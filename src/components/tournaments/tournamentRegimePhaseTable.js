@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Divider, Table, Button, message } from 'antd';
+import { Table, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import { useAuthState } from '../../context/authContext';
 import { useTournamentState } from '../../context/tournamentContext';
@@ -42,48 +42,42 @@ function TournamentRegimePhaseTable() {
   }
 
   return (
-    <Row justify='center'>
-      <Col span={20}>
-        <Divider orientation='left'>Tournament Regime Phases</Divider>
-        <Table
-          dataSource={regimePhases}
-          loading={regimePhasesLoading}
-          pagination={false}
-          rowKey='TournamentPhaseId'
-          size='small'
-        >
-          <Column
-            align='left'
-            dataIndex='Description'
-            title='Tournament Phase'
-          />
-          <Column
-            align='center'
-            dataIndex='Status'
-            title='Status'
-          />
-          <Column
-            align='right'
-            render={(text, record) => {
-              return (
-                <Button
-                  type='primary'
-                  size='small'
-                  danger
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removePhaseFromRegime(record.TournamentRegimeId, record.TournamentPhaseId);
-                  }}
-                >
-                  Remove
-                </Button>
-              )
-            }}
-          />
-        </Table>
-        {/* Add RegimePhase Button */}
-      </Col>
-    </Row>
+    <Table
+      dataSource={regimePhases}
+      loading={regimePhasesLoading}
+      pagination={false}
+      rowKey='TournamentPhaseId'
+      size='small'
+    >
+      <Column
+        align='left'
+        dataIndex='Description'
+        title='Tournament Phase'
+      />
+      <Column
+        align='center'
+        dataIndex='Status'
+        title='Status'
+      />
+      <Column
+        align='right'
+        render={(text, record) => {
+          return (
+            <Button
+              type='primary'
+              size='small'
+              danger
+              onClick={(event) => {
+                event.stopPropagation();
+                removePhaseFromRegime(record.TournamentRegimeId, record.TournamentPhaseId);
+              }}
+            >
+              Remove
+            </Button>
+          )
+        }}
+      />
+    </Table>
   );
 }
 

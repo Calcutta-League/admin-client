@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Divider, Table, Button, message } from 'antd';
+import { Table, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import { useAuthState } from '../../context/authContext';
 import TournamentService from '../../services/tournament/tournament.service';
@@ -44,44 +44,39 @@ function TournamentPhaseTable(props) {
   }
 
   return (
-    <Row justify='center'>
-      <Col span={20}>
-        <Divider orientation='left'>Tournament Phases</Divider>
-        <Table
-          dataSource={phases}
-          loading={phasesLoading}
-          pagination={false}
-          rowKey='TournamentPhaseId'
-          size='small'
-        >
-          <Column
-            align='left'
-            dataIndex='Description'
-            title='Tournament Phase'
-          />
-          <Column
-            align='center'
-            dataIndex='Status'
-            title='Status'
-          />
-          <Column
-            align='right'
-            render={(text, record) => {
-              return (
-                <Button
-                  type='primary'
-                  danger
-                  size='small'
-                  onClick={() => { deletePhase(record.TournamentPhaseId) }}
-                >
-                  Delete
-                </Button>
-              )
-            }}
-          />
-        </Table>
-      </Col>
-    </Row>
+    <Table
+      dataSource={phases}
+      loading={phasesLoading}
+      pagination={false}
+      rowKey='TournamentPhaseId'
+      size='small'
+    >
+      <Column
+        align='left'
+        dataIndex='Description'
+        title='Tournament Phase'
+      />
+      <Column
+        align='center'
+        dataIndex='Status'
+        title='Status'
+      />
+      <Column
+        align='right'
+        render={(text, record) => {
+          return (
+            <Button
+              type='primary'
+              danger
+              size='small'
+              onClick={() => { deletePhase(record.TournamentPhaseId) }}
+            >
+              Delete
+            </Button>
+          )
+        }}
+      />
+    </Table>
   );
 }
 

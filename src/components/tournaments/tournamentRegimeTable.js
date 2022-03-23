@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Divider, Table, Switch, Button, message } from 'antd';
+import { Table, Switch, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
 import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
@@ -67,71 +67,66 @@ function TournamentRegimeTable(props) {
   }
 
   return (
-    <Row justify='center'>
-      <Col span={20}>
-        <Divider orientation='left'>Tournament Regimes</Divider>
-        <Table
-          dataSource={regimes}
-          loading={regimesLoading}
-          pagination={false}
-          onRow={(record) => {
-            return {
-              onClick: (event) => {
-                regimeSelected(record)
-              }
-            }
-          }}
-          rowClassName={getRowClass}
-          rowKey='TournamentRegimeId'
-          size='small'
-        >
-          <Column
-            align='left'
-            dataIndex='TournamentRegimeName'
-            title='TournamentRegime'
-          />
-          <Column
-            align='center'
-            dataIndex='TestOnly'
-            title='Admin Only'
-            render={(value) => {
-              return <Switch defaultChecked={value} onChange={regimeAdminFlagChanged} />
-            }}
-          />
-          <Column
-            align='center'
-            dataIndex='InvalidatedDate'
-            title='Disabled'
-            render={(value) => {
-              let checked = !!value;
-              return <Switch defaultChecked={checked} onChange={regimeDisabledFlagChanged} />
-            }}
-          />
-          <Column
-            align='center'
-            title='Setup Status'
-          />
-          <Column
-            align='right'
-            title='Tournament Slots'
-            render={(text, record) => {
-              return (
-                <Button
-                  type='primary'
-                  size='small'
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
-                  }}
-                >
-                  Add/Edit
-                </Button>
-              );
-            }}
-          />
-        </Table>
-      </Col>
-    </Row>
+    <Table
+      dataSource={regimes}
+      loading={regimesLoading}
+      pagination={false}
+      onRow={(record) => {
+        return {
+          onClick: (event) => {
+            regimeSelected(record)
+          }
+        }
+      }}
+      rowClassName={getRowClass}
+      rowKey='TournamentRegimeId'
+      size='small'
+    >
+      <Column
+        align='left'
+        dataIndex='TournamentRegimeName'
+        title='TournamentRegime'
+      />
+      <Column
+        align='center'
+        dataIndex='TestOnly'
+        title='Admin Only'
+        render={(value) => {
+          return <Switch defaultChecked={value} onChange={regimeAdminFlagChanged} />
+        }}
+      />
+      <Column
+        align='center'
+        dataIndex='InvalidatedDate'
+        title='Disabled'
+        render={(value) => {
+          let checked = !!value;
+          return <Switch defaultChecked={checked} onChange={regimeDisabledFlagChanged} />
+        }}
+      />
+      <Column
+        align='center'
+        title='Setup Status'
+      />
+      <Column
+        align='right'
+        title='Tournament Slots'
+        render={(text, record) => {
+          return (
+            <Button
+              type='primary'
+              size='small'
+              onClick={(event) => {
+                event.stopPropagation()
+                navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
+              }}
+            >
+              Add/Edit
+            </Button>
+          );
+        }}
+      />
+    </Table>
   )
 }
 
