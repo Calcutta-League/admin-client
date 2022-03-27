@@ -2,42 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { Table, Switch, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
-import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 import { navigate } from '@reach/router';
+import useData from '../../hooks/useData';
 
 const { Column } = Table;
 
 function TournamentRegimeTable(props) {
 
-  const [regimes, setRegimes] = useState([]);
   const [regimesLoading, setRegimesLoading] = useState(true);
 
   const { authenticated, token } = useAuthState();
-  const { selectedRegimeId } = useTournamentState();
+  const { selectedRegimeId, tournamentRegimeRefreshTrigger } = useTournamentState();
 
-  const tournamentDispatch = useTournamentDispatch()
+  const tournamentDispatch = useTournamentDispatch();
+
+  const [regimes, regimesReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIMES}/${props.tournamentId}`,
+    method: 'GET',
+    refreshTrigger: tournamentRegimeRefreshTrigger,
+    conditions: [authenticated]
+  });
 
   useEffect(() => {
-    if (!!authenticated) {
-      fetchRegimes();
+    if (regimesReturnDate) {
+      setRegimesLoading(false);
     }
-  }, [authenticated]);
-
-  const fetchRegimes = () => {
-    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIMES, { tournamentId: props.tournamentId, token: token }).then(res => {
-      let data = res.data;
-
-      if (data.length > 0) {
-        setRegimes(data);
-      }
-      setRegimesLoading(false);
-    }).catch(error => {
-      console.log(error);
-      setRegimesLoading(false);
-    });
-  }
+  }, [regimesReturnDate]);
 
   const regimeSelected = (regime) => {
     tournamentDispatch({ type: 'update', key: 'selectedRegimeId', value: regime.TournamentRegimeId});

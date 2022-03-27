@@ -1,20 +1,20 @@
 import React, { useState, Fragment } from 'react';
 import { Divider, Modal, Row, Col, Button } from 'antd';
-import TournamentPhaseTable from './tournamentPhaseTable';
-import NewTournamentPhaseForm from '../tournaments/newTournamentPhaseForm';
 import { useTournamentDispatch } from '../../context/tournamentContext';
+import TournamentRegimeTable from './tournamentRegimeTable';
+import NewTournamentRegimeForm from './newTournamentRegimeForm';
 
-function TournamentPhases(props) {
+function TournamentRegimes(props) {
 
   const [visible, setVisible] = useState(false);
 
   const tournamentDispatch = useTournamentDispatch();
 
-  const dismissNewTournamentPhaseModal = (triggerPhasesDownload) => {
+  const dismissNewTournamentRegimeModal = (triggerRegimeDownload) => {
     dismiss();
 
-    if (triggerPhasesDownload) {
-      tournamentDispatch({ type: 'update', key: 'tournamentPhaseRefreshTrigger', value: new Date().valueOf() });
+    if (triggerRegimeDownload) {
+      tournamentDispatch({ type: 'update', key: 'tournamentRegimeRefreshTrigger', value: new Date().valueOf() });
     }
   }
 
@@ -22,7 +22,7 @@ function TournamentPhases(props) {
     setVisible(false);
   }
 
-  const newTournamentPhase = () => {
+  const newTournamentRegime = () => {
     setVisible(true);
   }
 
@@ -30,15 +30,16 @@ function TournamentPhases(props) {
     <Fragment>
       <Row justify='center'>
         <Col span={20}>
-          <Divider orientation='left'>Tournament Phases</Divider>
-          <TournamentPhaseTable tournamentId={props.tournamentId} />
+          <Divider orientation='left'>Tournament Regimes</Divider>
+          <TournamentRegimeTable tournamentId={props.tournamentId} />
           <Modal
             visible={visible}
-            title='New Tournament Phase'
+            width={720}
+            title='New Tournament Regime'
             onCancel={dismiss}
             footer={null}
           >
-            <NewTournamentPhaseForm tournamentId={props.tournamentId} dismiss={dismissNewTournamentPhaseModal} />
+            <NewTournamentRegimeForm tournamentId={props.tournamentId} dismiss={dismissNewTournamentRegimeModal} />
           </Modal>
         </Col>
       </Row>
@@ -46,14 +47,14 @@ function TournamentPhases(props) {
         <Button
           type='primary'
           size='small'
-          onClick={newTournamentPhase}
+          onClick={newTournamentRegime}
           style={{ marginTop: 12 }}
         >
-          New Phase
+          New Regime
         </Button>
       </Row>
     </Fragment>
   )
 }
 
-export default TournamentPhases;
+export default TournamentRegimes;

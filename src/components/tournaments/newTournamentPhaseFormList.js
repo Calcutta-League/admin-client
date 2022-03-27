@@ -7,16 +7,11 @@ const layout = {
   wrapperCol: { span: 16 }
 };
 
-const tailLayout = {
-  style: { textAlign: 'center' },
-  wrapperCol: { span: 24 }
-};
-
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
-    sm: { span: 16, offset: 6 },
-  },
+    sm: { span: 16, offset: 6 }
+  }
 };
 
 const addFieldLayout = {
@@ -56,8 +51,8 @@ function NewTournamentPhaseFormList() {
                   {
                     required: true,
                     whitespace: true,
-                    message: 'Please enter a phase name or delete this field',
-                  },
+                    message: 'Please enter a phase name or delete this field'
+                  }
                 ]}
                 noStyle
               >

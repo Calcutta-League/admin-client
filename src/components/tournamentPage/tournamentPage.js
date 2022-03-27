@@ -7,6 +7,7 @@ import { useAuthState } from '../../context/authContext';
 import TournamentRegimeTable from './tournamentRegimeTable';
 import TournamentRegimePhaseTable from './tournamentRegimePhaseTable';
 import TournamentPhases from './tournamentPhases';
+import TournamentRegimes from './tournamentRegimes';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -100,22 +101,7 @@ function TournamentPage(props) {
         </Col>
       </Row>
       <TournamentPhases tournamentId={props.tournamentId} />
-      <Row justify='center'>
-        <Col span={20}>
-          <Divider orientation='left'>Tournament Regimes</Divider>
-          <TournamentRegimeTable tournamentId={props.tournamentId} />
-        </Col>
-      </Row>
-      <Row justify='center'>
-        <Button
-          type='primary'
-          size='small'
-          onClick={newTournamentRegime}
-          style={{ marginTop: 12 }}
-        >
-          New Regime
-        </Button>
-      </Row>
+      <TournamentRegimes tournamentId={props.tournamentId} />
       <Row justify='center'>
         <Col span={20}>
           <Divider orientation='left'>Tournament Regime Phases</Divider>

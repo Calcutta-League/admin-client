@@ -19,9 +19,12 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   GET_TOURNAMENT_REGIME_PHASES: '/getTournamentRegimePhases',
   GET_TOURNAMENT_REGIME_METADATA: '/getTournamentRegimeMetadata',
   GET_TOURNAMENT_REGIME_SLOTS: '/getTournamentRegimeSlots',
+  GET_BRACKET_TYPES: '/getBracketTypes',
   NEW_TOURNAMENT: '/newTournament',
   NEW_TOURNAMENT_PHASE: '/newTournamentPhase',
-  DELETE_TOURNAMENT_PHASE: '/deleteTournamentPhase'
+  NEW_TOURNAMENT_REGIME: '/newTournamentRegime',
+  DELETE_TOURNAMENT_PHASE: '/deleteTournamentPhase',
+  DELETE_TOURNAMENT_REGIME: '/deleteTournamentRegime'
 };
 
 export const SPORTS_SERVICE_ENDPOINTS = {

@@ -40,7 +40,7 @@ function TournamentPhaseTable(props) {
   });
 
   useEffect(() => {
-    if (deletePhaseResponse[0]?.Error) {
+    if (deletePhaseResponse && deletePhaseResponse.length && deletePhaseResponse[0]?.Error) {
       message.error(deletePhaseResponse[0].Error);
     }
 

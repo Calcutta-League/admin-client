@@ -23,7 +23,6 @@ function NewTournamentPhaseForm(props) {
 
   const createTournamentPhase = (values) => {
     setLoading(true);
-    console.log(values);
 
     const data = {
       tournamentId: props.tournamentId,
