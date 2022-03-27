@@ -10,8 +10,8 @@ import Topnav from './components/navigation/topnav';
 import { AuthProvider } from './context/authContext';
 import AuthModal from './components/modals/authModal';
 import Tournaments from './components/tournaments/tournaments';
-import TournamentPage from './components/tournaments/tournamentPage';
-import TournamentRegimePage from './components/tournaments/tournamentRegimePage';
+import TournamentPage from './components/tournamentPage/tournamentPage';
+import TournamentRegimePage from './components/tournamentRegimePage/tournamentRegimePage';
 import { TournamentProvider } from './context/tournamentContext';
 
 const { Header, Content } = Layout;

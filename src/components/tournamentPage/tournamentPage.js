@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Divider, Typography, Layout, Switch, Card, Button, message } from 'antd';
+import { Row, Col, Divider, Typography, Layout, Switch, Card, Button, message, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
 import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
-import TournamentPhaseTable from './tournamentPhaseTable';
 import TournamentRegimeTable from './tournamentRegimeTable';
 import TournamentRegimePhaseTable from './tournamentRegimePhaseTable';
+import TournamentPhases from './tournamentPhases';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -17,6 +17,8 @@ function TournamentPage(props) {
   const [adminOnly, setAdminOnly] = useState(null);
   const [disabled, setDisabled] = useState(null);
   const [metadataLoading, setMetadataLoading] = useState(true);
+
+  const [newTournamentPhaseModalVisible, setNewTournamentPhaseModalVisible] = useState(false);
 
   const { authenticated, token } = useAuthState();
 
@@ -54,11 +56,6 @@ function TournamentPage(props) {
 
   const tournamentDisabledChanged = (value) => {
     setDisabled(value);
-    // TODO: implement
-    message.error('Not Implemented Yet');
-  }
-
-  const newTournamentPhase = () => {
     // TODO: implement
     message.error('Not Implemented Yet');
   }
@@ -102,22 +99,7 @@ function TournamentPage(props) {
           </Card>
         </Col>
       </Row>
-      <Row justify='center'>
-        <Col span={20}>
-          <Divider orientation='left'>Tournament Phases</Divider>
-          <TournamentPhaseTable tournamentId={props.tournamentId} />
-        </Col>
-      </Row>
-      <Row justify='center'>
-        <Button
-          type='primary'
-          size='small'
-          onClick={newTournamentPhase}
-          style={{ marginTop: 12 }}
-        >
-          New Phase
-        </Button>
-      </Row>
+      <TournamentPhases tournamentId={props.tournamentId} />
       <Row justify='center'>
         <Col span={20}>
           <Divider orientation='left'>Tournament Regimes</Divider>
