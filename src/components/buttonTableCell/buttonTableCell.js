@@ -20,9 +20,9 @@ function ButtonTableCell(props) {
 
   const [loading, setLoading] = useState(false);
 
-  const buttonClicked = () => {
+  const buttonClicked = (event) => {
     setLoading(true);
-    props.onClick();
+    props.onClick(event);
   }
 
   return (

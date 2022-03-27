@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Switch, Button, message } from 'antd';
+import { Table, Switch, Button, message, Space } from 'antd';
 import 'antd/dist/antd.css';
-import TournamentService from '../../services/tournament/tournament.service';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 import { navigate } from '@reach/router';
 import useData from '../../hooks/useData';
+import { ButtonTableCell } from '../buttonTableCell';
 
 const { Column } = Table;
 
 function TournamentRegimeTable(props) {
 
-  const [regimesLoading, setRegimesLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [triggerDelete, setTriggerDelete] = useState(null);
+  const [deletePayload, setDeletePayload] = useState(null);
+  const [deleteFlag, setDeleteFlag] = useState(false);
 
-  const { authenticated, token } = useAuthState();
+  const { authenticated } = useAuthState();
   const { selectedRegimeId, tournamentRegimeRefreshTrigger } = useTournamentState();
 
   const tournamentDispatch = useTournamentDispatch();
@@ -27,11 +30,45 @@ function TournamentRegimeTable(props) {
     conditions: [authenticated]
   });
 
+  const [deleteRegimeResponse, deleteRegimeReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.DELETE_TOURNAMENT_REGIME,
+    method: 'POST',
+    refreshTrigger: triggerDelete,
+    payload: deletePayload,
+    conditions: [authenticated, deleteFlag]
+  });
+
   useEffect(() => {
-    if (regimesReturnDate) {
-      setRegimesLoading(false);
+    if (deleteRegimeResponse && deleteRegimeResponse.length && deleteRegimeResponse[0]?.Error) {
+      message.error(deleteRegimeResponse[0].Error);
     }
-  }, [regimesReturnDate]);
+
+    setDeleteFlag(false);
+    tournamentDispatch({ type: 'update', key: 'tournamentRegimeRefreshTrigger', value: new Date().valueOf() });
+  }, [deleteRegimeReturnDate]);
+
+  useEffect(() => {
+    // Regimes haven't been downloaded yet, default to loading
+    if (!regimesReturnDate) {
+      setLoading(true);
+    }
+
+    // a refresh request has been made, but the fetch hasn't returned yet
+    if ((tournamentRegimeRefreshTrigger || 0) > regimesReturnDate) {
+      setLoading(true);
+    }
+
+    // data returned after the latest refresh request
+    if ((tournamentRegimeRefreshTrigger || 0) <= regimesReturnDate) {
+      setLoading(false);
+    }
+  }, [tournamentRegimeRefreshTrigger, regimesReturnDate]);
+
+  useEffect(() => {
+    // disable delete requests
+    setDeleteFlag(false);
+  }, [deleteRegimeReturnDate]);
 
   const regimeSelected = (regime) => {
     tournamentDispatch({ type: 'update', key: 'selectedRegimeId', value: regime.TournamentRegimeId});
@@ -60,10 +97,21 @@ function TournamentRegimeTable(props) {
     return 'row-clickable';
   }
 
+  const deleteRegime = (tournamentRegimeId) => {
+    const data = {
+      tournamentRegimeId: tournamentRegimeId
+    };
+
+    // queue up the delete request
+    setDeleteFlag(true);
+    setDeletePayload(data);
+    setTriggerDelete(new Date().valueOf());
+  }
+
   return (
     <Table
       dataSource={regimes}
-      loading={regimesLoading}
+      loading={loading}
       pagination={false}
       onRow={(record) => {
         return {
@@ -104,19 +152,31 @@ function TournamentRegimeTable(props) {
       />
       <Column
         align='right'
-        title='Tournament Slots'
         render={(text, record) => {
           return (
-            <Button
-              type='primary'
-              size='small'
-              onClick={(event) => {
-                event.stopPropagation()
-                navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
-              }}
-            >
-              Add/Edit
-            </Button>
+            <Space>
+              <Button
+                type='primary'
+                size='small'
+                onClick={(event) => {
+                  event.stopPropagation()
+                  navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
+                }}
+              >
+                Setup
+              </Button>
+              <ButtonTableCell
+                type='primary'
+                danger
+                size='small'
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteRegime(record.TournamentRegimeId)
+                }}
+              >
+                Delete
+              </ButtonTableCell>
+            </Space>
           );
         }}
       />
