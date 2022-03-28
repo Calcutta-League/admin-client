@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Divider, Typography, Layout, Switch, Card, Button, message, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import TournamentService from '../../services/tournament/tournament.service';
-import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
-import TournamentRegimeTable from './tournamentRegimeTable';
 import TournamentRegimePhaseTable from './tournamentRegimePhaseTable';
 import TournamentPhases from './tournamentPhases';
 import TournamentRegimes from './tournamentRegimes';
+import useData from '../../hooks/useData';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -19,46 +19,97 @@ function TournamentPage(props) {
   const [disabled, setDisabled] = useState(null);
   const [metadataLoading, setMetadataLoading] = useState(true);
 
-  const [newTournamentPhaseModalVisible, setNewTournamentPhaseModalVisible] = useState(false);
+  const [triggerMetadata, setTriggerMetadata] = useState(null);
 
-  const { authenticated, token } = useAuthState();
+  const [triggerAdminOnly, setTriggerAdminOnly] = useState(null);
+  const [adminOnlyPayload, setAdminOnlyPayload] = useState(null);
+  const [adminOnlyFlag, setAdminOnlyFlag] = useState(false);
+
+  const [triggerDisabledFlag, setTriggerDisabledFlag] = useState(null);
+  const [disabledFlagPayload, setDisabledFlagPayload] = useState(null);
+  const [disabledFlagAllowed, setDisabledFlagAllowed] = useState(false);
+
+  const { authenticated } = useAuthState();
+
+  const [metadata, metadataReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_METADATA}/${props.tournamentId}`,
+    method: 'GET',
+    refreshTrigger: triggerMetadata,
+    conditions: [authenticated]
+  });
+
+  const [adminFlagResponse, adminFlagReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.SET_TOURNAMENT_ADMIN_FLAG,
+    method: 'POST',
+    refreshTrigger: triggerAdminOnly,
+    payload: adminOnlyPayload,
+    conditions: [authenticated, adminOnlyFlag, !!triggerAdminOnly]
+  });
+
+  const [disabledFlagResponse, disabledFlagReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.SET_TOURNAMENT_DISABLED_FLAG,
+    method: 'POST',
+    refreshTrigger: triggerDisabledFlag,
+    payload: disabledFlagPayload,
+    conditions: [authenticated, disabledFlagAllowed, !!triggerDisabledFlag]
+  })
 
   useEffect(() => {
-    if (!!authenticated) {
-      fetchMetadata();
+    if (metadata && metadata.length) {
+      setName(metadata[0].TournamentName);
+      setAdminOnly(metadata[0].TestOnly);
+      setDisabled(!!metadata[0].Invalidated);
     }
-  }, [authenticated]);
 
-  const fetchMetadata = () => {
-    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_METADATA, { tournamentId: props.tournamentId, token: token }).then(res => {
-      let data = res.data;
+    setMetadataLoading(false);
+  }, [metadataReturnDate]);
 
-      if (data.length > 0) {
-        let name = data[0].TournamentName;
-        let adminOnly = data[0].TestOnly;
-        let disabled = !!data[0].Invalidated
+  useEffect(() => {
+    if (!!adminFlagReturnDate) {
+      triggerMetadataDownload();
+      setAdminOnlyFlag(false);
+    }
+  }, [adminFlagReturnDate]);
 
-        setName(name);
-        setAdminOnly(adminOnly);
-        setDisabled(disabled);
-      }
-      setMetadataLoading(false);
-    }).catch(error => {
-      console.log(error);
-      setMetadataLoading(false);
-    })
+  useEffect(() => {
+    if (!!disabledFlagReturnDate) {
+      triggerMetadataDownload();
+      setDisabledFlagAllowed(false);
+    }
+  }, [disabledFlagReturnDate]);
+
+  const triggerMetadataDownload = () => {
+    setMetadataLoading(true);
+    setTriggerMetadata(new Date().valueOf());
   }
 
   const tournamentAdminOnlyChanged = (value) => {
     setAdminOnly(value);
-    // TODO: implement
-    message.error('Not Implemented Yet');
+
+    const data = {
+      tournamentId: props.tournamentId,
+      adminFlag: value
+    };
+
+    setAdminOnlyPayload(data);
+    setAdminOnlyFlag(true);
+    setTriggerAdminOnly(new Date().valueOf());
   }
 
   const tournamentDisabledChanged = (value) => {
     setDisabled(value);
-    // TODO: implement
-    message.error('Not Implemented Yet');
+
+    const data = {
+      tournamentId: props.tournamentId,
+      disabledFlag: value
+    }
+
+    setDisabledFlagPayload(data);
+    setDisabledFlagAllowed(true);
+    setTriggerDisabledFlag(new Date().valueOf());
   }
 
   const newTournamentRegime = () => {
@@ -85,7 +136,7 @@ function TournamentPage(props) {
             bodyStyle={{ textAlign: 'center' }}
             headStyle={{ textAlign: 'center '}}
           >
-            <Switch defaultChecked={adminOnly} onChange={tournamentAdminOnlyChanged} />
+            <Switch checked={adminOnly} onChange={tournamentAdminOnlyChanged} />
           </Card>
         </Col>
         <Col xs={10} sm={8} md={4}>
@@ -96,7 +147,7 @@ function TournamentPage(props) {
             bodyStyle={{ textAlign: 'center' }}
             headStyle={{ textAlign: 'center '}}
           >
-            <Switch defaultChecked={disabled} onChange={tournamentDisabledChanged} />
+            <Switch checked={disabled} onChange={tournamentDisabledChanged} />
           </Card>
         </Col>
       </Row>

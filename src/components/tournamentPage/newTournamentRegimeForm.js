@@ -53,14 +53,12 @@ function NewTournamentRegimeForm(props) {
     setNewRegimeFlag(false);
 
     if (newRegimeReturnDate) {
-      console.log(newRegimeResponse);
       props.dismiss(true);
     }
   }, [newRegimeReturnDate]);
 
   const createTournamentRegime = (values) => {
     setLoading(true);
-    console.log(values);
 
     const data = {
       tournamentId: props.tournamentId,
