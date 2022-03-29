@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Divider, Typography, Layout, Switch, Card, Button, message, Modal } from 'antd';
 import 'antd/dist/antd.css';
-import TournamentService from '../../services/tournament/tournament.service';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import TournamentRegimePhaseTable from './tournamentRegimePhaseTable';
@@ -110,11 +109,6 @@ function TournamentPage(props) {
     setDisabledFlagPayload(data);
     setDisabledFlagAllowed(true);
     setTriggerDisabledFlag(new Date().valueOf());
-  }
-
-  const newTournamentRegime = () => {
-    // TODO: implement
-    message.error('Not Implemented Yet');
   }
 
   const newTournamentRegimePhase = () => {
