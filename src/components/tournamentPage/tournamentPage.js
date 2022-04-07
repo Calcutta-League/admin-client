@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Divider, Typography, Layout, Switch, Card, Button, message, Modal } from 'antd';
+import { Row, Col, Typography, Layout, Switch, Card, message } from 'antd';
 import 'antd/dist/antd.css';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
-import TournamentRegimePhaseTable from './tournamentRegimePhaseTable';
 import TournamentPhases from './tournamentPhases';
 import TournamentRegimes from './tournamentRegimes';
 import useData from '../../hooks/useData';
+import TournamentRegimePhases from './tournamentRegimePhases';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -111,11 +111,6 @@ function TournamentPage(props) {
     setTriggerDisabledFlag(new Date().valueOf());
   }
 
-  const newTournamentRegimePhase = () => {
-    // TODO: implement
-    message.error('Not Implemented Yet');
-  }
-
   return (
     <Content>
       <Row justify='center'>
@@ -147,22 +142,7 @@ function TournamentPage(props) {
       </Row>
       <TournamentPhases tournamentId={props.tournamentId} />
       <TournamentRegimes tournamentId={props.tournamentId} />
-      <Row justify='center'>
-        <Col span={20}>
-          <Divider orientation='left'>Tournament Regime Phases</Divider>
-          <TournamentRegimePhaseTable />
-        </Col>
-      </Row>
-      <Row justify='center'>
-        <Button
-          type='primary'
-          size='small'
-          onClick={newTournamentRegimePhase}
-          style={{ marginTop: 12 }}
-        >
-          New Regime Phase
-        </Button>
-      </Row>
+      <TournamentRegimePhases tournamentId={props.tournamentId} />
     </Content>
   );
 }

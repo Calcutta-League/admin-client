@@ -27,7 +27,8 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   DELETE_TOURNAMENT_REGIME: '/deleteTournamentRegime',
   DELETE_TOURNAMENT: '/deleteTournament',
   SET_TOURNAMENT_ADMIN_FLAG: '/setTournamentAdminFlag',
-  SET_TOURNAMENT_DISABLED_FLAG: '/setTournamentDisabledFlag'
+  SET_TOURNAMENT_DISABLED_FLAG: '/setTournamentDisabledFlag',
+  SET_TOURNAMENT_REGIME_PHASES: '/setTournamentRegimePhases'
 };
 
 export const SPORTS_SERVICE_ENDPOINTS = {

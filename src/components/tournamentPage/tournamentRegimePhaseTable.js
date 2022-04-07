@@ -2,39 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, message } from 'antd';
 import 'antd/dist/antd.css';
 import { useAuthState } from '../../context/authContext';
-import { useTournamentState } from '../../context/tournamentContext';
-import TournamentService from '../../services/tournament/tournament.service';
-import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
+import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import useData from '../../hooks/useData';
 
 const { Column } = Table;
 
 function TournamentRegimePhaseTable() {
 
-  const [regimePhases, setRegimePhases] = useState([]);
   const [regimePhasesLoading, setRegimePhasesLoading] = useState(false);
 
-  const { authenticated, token } = useAuthState();
-  const { selectedRegimeId } = useTournamentState();
+  const { authenticated } = useAuthState();
+  const { selectedRegimeId, regimePhaseRefreshTrigger } = useTournamentState();
+
+  const tournamentDispatch = useTournamentDispatch();
+
+  const [regimePhases, regimePhasesReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_PHASES}/${selectedRegimeId}`,
+    method: 'GET',
+    refreshTrigger: regimePhaseRefreshTrigger,
+    conditions: [authenticated, selectedRegimeId]
+  });
 
   useEffect(() => {
-    if (!!authenticated && selectedRegimeId != undefined) {
-      fetchRegimePhases();
-    }
-  }, [authenticated, selectedRegimeId]);
+    tournamentDispatch({ type: 'update', key: 'regimePhaseRefreshTrigger', value: new Date().valueOf() });
+  }, [selectedRegimeId]);
 
-  const fetchRegimePhases = () => {
-    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_PHASES, { tournamentRegimeId: selectedRegimeId, token: token }).then(res => {
-      let data = res.data;
-      console.log(data);
-      if (data.length > 0) {
-        setRegimePhases(data);
-      }
+  useEffect(() => {
+    // a refresh request has been made, but the fetch hasn't returned yet
+    if ((regimePhaseRefreshTrigger || 0) > regimePhasesReturnDate) {
+      setRegimePhasesLoading(true);
+    }
+
+    // data returned after the latest refresh request
+    if ((regimePhaseRefreshTrigger || 0) <= regimePhasesReturnDate) {
       setRegimePhasesLoading(false);
-    }).catch(error => {
-      console.log(error);
-      setRegimePhasesLoading(false);
-    });
-  }
+    }
+  }, [regimePhaseRefreshTrigger, regimePhasesReturnDate]);
 
   const removePhaseFromRegime = (tournamentRegimeId, tournamentPhaseId) => {
     // TODO: implement
