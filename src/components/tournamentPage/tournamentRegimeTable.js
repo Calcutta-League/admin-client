@@ -65,11 +65,6 @@ function TournamentRegimeTable(props) {
     }
   }, [tournamentRegimeRefreshTrigger, regimesReturnDate]);
 
-  useEffect(() => {
-    // disable delete requests
-    setDeleteFlag(false);
-  }, [deleteRegimeReturnDate]);
-
   const regimeSelected = (regime) => {
     tournamentDispatch({ type: 'update', key: 'selectedRegimeId', value: regime.TournamentRegimeId});
   }
