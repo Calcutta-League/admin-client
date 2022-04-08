@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Divider, message } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Select, Divider, message, Checkbox } from 'antd';
 import SportsService from '../../services/sports/sports.service';
-import { SPORTS_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { SPORTS_SERVICE_ENDPOINTS, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
+import TournamentService from '../../services/tournament/tournament.service';
+import NewTournamentPhaseFormList from './newTournamentPhaseFormList';
 
 const { Option } = Select;
 
@@ -16,19 +17,6 @@ const tailLayout = {
   style: { textAlign: 'center' },
   wrapperCol: { span: 24 }
 };
-
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 16, offset: 6 },
-  },
-};
-
-const addFieldLayout = {
-  wrapperCol: {
-    xs: { span: 16, offset: 4 }
-  }
-}
 
 function NewTournamentForm(props) {
 
@@ -62,14 +50,27 @@ function NewTournamentForm(props) {
     setNewTournamentLoading(true);
     console.log(values);
 
-    // call props.continue and pass in the new tournament's id
+    const body = {
+      tournamentName: values.tournamentName,
+      adminOnly: !!values.adminOnly,
+      sportId: values.sport,
+      phases: values.phases
+    }
+
+    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.NEW_TOURNAMENT, { token: token, data: body }).then(res => {
+      console.log(res);
+      setNewTournamentLoading(false);
+      props.continue(res.data[0].NewTournamentId);
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   const generateSportOptions = () => {
     if (sports && sports.length > 0) {
       return sports.map(sport => {
         return (
-          <Option value={sport.SportId}>{sport.Abbreviation}</Option>
+          <Option key={sport.SportId} value={sport.SportId}>{sport.Abbreviation}</Option>
         );
       });
     }
@@ -104,72 +105,14 @@ function NewTournamentForm(props) {
         </Select>
       </Form.Item>
       <Form.Item
-        label='Admin Only'
         name='adminOnly'
+        valuePropName='checked'
+        wrapperCol={{ offset: 6, span: 16 }}
       >
-        <Input type='checkbox' />
+        <Checkbox>Admin Only</Checkbox>
       </Form.Item>
       <Divider orientation='left'>Tournament Phases</Divider>
-      <Form.List
-        name='phases'
-        rules={[
-          {
-            validator: async (_, phases) => {
-              if (!phases || phases.length < 1) {
-                return Promise.reject(new Error('At least one phase is required'));
-              }
-            },
-          }
-        ]}
-      >
-        {(fields, { add, remove }, { errors }) => (
-          <>
-            {fields.map((field, index) => (
-              <Form.Item
-                {...(index === 0 ? layout : formItemLayoutWithOutLabel)}
-                label={index === 0 ? 'Phases' : ''}
-                required={false}
-                key={field.key}
-              >
-                <Form.Item
-                  {...field}
-                  validateTrigger={['onChange', 'onBlur']}
-                  rules={[
-                    {
-                      required: true,
-                      whitespace: true,
-                      message: 'Please enter a phase name or delete this field',
-                    },
-                  ]}
-                  noStyle
-                >
-                  <Input placeholder='Phase name' style={{ width: '80%' }} />
-                </Form.Item>
-                {fields.length > 1 ? (
-                  <MinusCircleOutlined
-                    className='dynamic-delete-button'
-                    onClick={() => remove(field.name)}
-                  />
-                ) : null}
-              </Form.Item>
-            ))}
-            <Form.Item
-              style={{ textAlign: 'center' }}
-              {...addFieldLayout}
-            >
-              <Button
-                type='dashed'
-                onClick={() => add()}
-                style={{ width: '100%' }}
-                icon={<PlusOutlined />}
-              >
-                Add Phase
-              </Button>
-              <Form.ErrorList errors={errors} />
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
+      <NewTournamentPhaseFormList />
       <Form.Item {...tailLayout}>
         <Button type='primary' htmlType='submit' loading={newTournamentLoading}>
           Continue

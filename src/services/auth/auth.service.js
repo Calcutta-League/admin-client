@@ -6,10 +6,8 @@ export function signIn(email, password) {
       username: email,
       password: password
     }).then(response => {
-      console.log(response);
       return getCurrentSession();
     }).then(session => {
-      console.log(session);
       resolve({ token: session.idToken.jwtToken });
     }).catch(error => {
       console.log(error);

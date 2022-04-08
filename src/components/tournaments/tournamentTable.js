@@ -1,46 +1,66 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Table } from 'antd';
+import { Col, message, Row, Table } from 'antd';
 import 'antd/dist/antd.css';
-import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
-import TournamentService from '../../services/tournament/tournament.service';
-import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import { navigate } from '@reach/router';
+import { ButtonTableCell } from '../buttonTableCell';
+import useData from '../../hooks/useData';
 
 const { Column } = Table;
 
 function TournamentTable() {
 
   const [tableLoading, setTableLoading] = useState(true);
+  const [triggerTournaments, setTriggerTournaments] = useState(null);
 
-  const { tournaments } = useTournamentState();
-  const { authenticated, token } = useAuthState();
+  const [deleteTrigger, setDeleteTrigger] = useState(null);
+  const [deletePayload, setDeletePayload] = useState(null);
+  const [deleteFlag, setDeleteFlag] = useState(false);
 
-  const tournamentDispatch = useTournamentDispatch();
+  const { authenticated } = useAuthState();
 
-  useEffect(() => {
-    if (!!authenticated) {
-      getTournaments();
-    }
-  }, [authenticated]);
+  const [tournaments, tournamentsReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENTS,
+    method: 'GET',
+    refreshTrigger: triggerTournaments,
+    conditions: [authenticated]
+  });
+
+  const [deleteTournamentResponse, deleteTournamentReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.DELETE_TOURNAMENT,
+    method: 'POST',
+    refreshTrigger: deleteTrigger,
+    payload: deletePayload,
+    conditions: [authenticated, deleteFlag, !!deleteTrigger]
+  });
 
   useEffect(() => {
     if (tournaments && tournaments.length > 0) {
       setTableLoading(false);
     }
-  }, [tournaments]);
+  }, [tournamentsReturnDate]);
 
-  const getTournaments = () => {
-    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENTS, { token: token }).then(data => {
-      console.log(data);
-      tournamentDispatch({ type: 'update', key: 'tournaments', value: data.data });
-    }).catch(error => {
-      console.log(error);
-    });
-  }
+  useEffect(() => {
+    if (deleteTournamentResponse && deleteTournamentResponse.length && deleteTournamentResponse[0]?.Error) {
+      message.error(deleteTournamentResponse[0].Error);
+    }
+
+    setDeleteFlag(false);
+    setTriggerTournaments(new Date().valueOf());
+    setTableLoading(true);
+  }, [deleteTournamentReturnDate]);
 
   const tournamentClicked = (tournament) => {
     navigate(`/tournaments/${tournament.TournamentId}`);
+  }
+
+  const deleteTournament = (tournamentId) => {
+    setDeleteFlag(true);
+    setDeletePayload({ tournamentId });
+    setDeleteTrigger(new Date().valueOf());
   }
 
   return (
@@ -88,6 +108,25 @@ function TournamentTable() {
             align='center'
             dataIndex='IsDisabled'
             title='Disabled'
+          />
+          <Column
+            align='right'
+            width={120}
+            render={(text, record) => {
+              return (
+                <ButtonTableCell
+                  type='primary'
+                  danger
+                  size='small'
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    deleteTournament(record.TournamentId);
+                  }}
+                >
+                  Delete
+                </ButtonTableCell>
+              );
+            }}
           />
         </Table>
       </Col>
