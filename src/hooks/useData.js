@@ -11,6 +11,7 @@ import { useAuthState } from '../context/authContext';
  * @param {Object} options.headers - HTTP headers
  * @param {Object} options.payload - HTTP payload - used for POST requests
  * @param {Function} options.processData - function for processing data returned by the API
+ * @param {Number} options.refreshTrigger - changing this value will trigger another API call with the same configuration
  * @param {Array} options.conditions - a list of conditions that must evaluate to true in order to make the api call
  */
 function useData({ baseUrl, endpoint, method, headers = {}, payload = {}, processData, refreshTrigger, conditions = [] }) {

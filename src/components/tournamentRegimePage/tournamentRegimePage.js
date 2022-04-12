@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Typography, Row, Col, Card, Switch, Button, Table } from 'antd';
-import Column from 'rc-table/lib/sugar/Column';
-import TournamentService from '../../services/tournament/tournament.service';
-import { TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { Layout, Typography, Row, Col, Card, Switch, Button, Divider, message, Input } from 'antd';
+import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
+import useData from '../../hooks/useData';
+import TournamentSlotsTable from './tournamentSlotsTable';
+import { AdminFlagCard, BracketTypeCard, DisabledFlagCard } from './metadataCards';
+import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -14,77 +16,80 @@ function TournamentRegimePage(props) {
   const [adminOnly, setAdminOnly] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [slotCount, setSlotCount] = useState(null);
-  const [regimeSlotsLoading, setRegimeSlotsLoading] = useState(true);
-  const [regimeSlots, setRegimeSlots] = useState([]);
+  const [bracketTypeId, setBracketTypeId] = useState(null);
+  const [regimeDescription, setRegimeDescription] = useState('');
 
-  const { authenticated, token } = useAuthState();
+  const { authenticated } = useAuthState();
+  const { tournamentRegimeMetadataTrigger } = useTournamentState();
+
+  const tournamentDispatch = useTournamentDispatch();
+
+  const [metadata, metadataReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_METADATA}/${props.tournamentRegimeId}`,
+    method: 'GET',
+    refreshTrigger: tournamentRegimeMetadataTrigger,
+    conditions: [authenticated]
+  });
 
   useEffect(() => {
-    if (!!authenticated) {
-      fetchMetadata();
-      fetchSlots();
+    if (metadataReturnDate && metadata.length > 0) {
+      setMetadataLoading(false);
+
+      setAdminOnly(metadata[0].TestOnly);
+      setDisabled(!!metadata[0].InvalidatedDate);
+      setSlotCount(metadata[0].SlotCount);
+      setBracketTypeId(metadata[0].BracketTypeId);
+      setRegimeDescription(metadata[0].Description);
     }
-  }, [authenticated]);
+  }, [metadataReturnDate]);
 
-  const fetchMetadata = () => {
-    const regimeId = props.tournamentRegimeId;
+  const [descriptionPayload, setDescriptionPayload] = useState(null);
+  const [descriptionTrigger, setDescriptionTrigger] = useState(null);
+  const [allowDescriptionUpdate, setAllowDescriptionUpdate] = useState(false);
+  const [descriptionUpdateLoading, setDescriptionUpdateLoading] = useState(false);
 
-    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_METADATA, { tournamentRegimeId: regimeId, token: token }).then(res => {
-      let data = res.data;
+  const [descriptionUpdate, descriptionUpdateReturnDate] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.SET_TOURNAMENT_REGIME_DESCRIPTION,
+    method: 'POST',
+    payload: descriptionPayload,
+    refreshTrigger: descriptionTrigger,
+    conditions: [authenticated, allowDescriptionUpdate]
+  });
 
-      if (data.length > 0) {
-        let adminOnly = data[0].TestOnly;
-        let disabled = !!data[0].InvalidatedDate;
-        let slotCount = data[0].SlotCount;
+  useEffect(() => {
+    setAllowDescriptionUpdate(false);
+    setDescriptionUpdateLoading(false);
 
-        setAdminOnly(adminOnly);
-        setDisabled(disabled);
-        setSlotCount(slotCount);
-      }
-      setMetadataLoading(false);
-    }).catch(error => {
-      console.log(error);
-      setMetadataLoading(false);
-    })
-  }
+    if (descriptionUpdateReturnDate) {
+      tournamentDispatch({ type: 'update', key: 'tournamentRegimeMetadataTrigger', value: new Date().valueOf() });
+    }
+  }, [descriptionUpdateReturnDate]);
 
-  const fetchSlots = () => {
-    const regimeId = props.tournamentRegimeId;
-
-    TournamentService.callApi(TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_SLOTS, { tournamentRegimeId: regimeId, token: token }).then(res => {
-      const data = res.data;
-
-      if (data.length > 0) {
-        setRegimeSlots(data);
-      }
-      setRegimeSlotsLoading(false);
-    }).catch(error => {
-      console.log(error);
-      setMetadataLoading(false);
-    })
-  }
-
-  // need five POST endpoints:
-    // AdminOnly
-    // Disabled
+  // todo endpoints:
     // Bulk Load
     // Single Load
     // Single Remove
-
-  const regimeAdminOnlyChanged = () => {
-
-  }
-
-  const regimeDisabledChanged = () => {
-    
-  }
 
   const bulkLoadTournamentSlots = () => {
 
   }
 
-  const removeSlot = () => {
+  const regimeDescriptionChanged = ({ target: { value }}) => {
+    setRegimeDescription(value);
+  }
 
+  const updateRegimeDescription = () => {
+    setDescriptionUpdateLoading(true);
+    
+    setDescriptionPayload({
+      tournamentRegimeId: props.tournamentRegimeId,
+      description: regimeDescription
+    });
+
+    setDescriptionTrigger(new Date().valueOf());
+    setAllowDescriptionUpdate(true);
   }
 
   return (
@@ -93,27 +98,47 @@ function TournamentRegimePage(props) {
         <Title level={1}>{props.location.state.tournamentRegimeName}</Title>
       </Row>
       <Row justify='space-around'>
-        <Col xs={10} sm={8} md={4}>
-          <Card
-            title='Admin Only'
-            size='small'
-            loading={metadataLoading}
-            bodyStyle={{ textAlign: 'center' }}
-            headStyle={{ textAlign: 'center '}}
-          >
-            <Switch defaultChecked={adminOnly} onChange={regimeAdminOnlyChanged} />
-          </Card>
+        <Col xs={8} sm={6} md={4}>
+          <AdminFlagCard tournamentRegimeId={props.tournamentRegimeId} adminOnly={adminOnly} loading={metadataLoading} />
         </Col>
-        <Col xs={10} sm={8} md={4}>
-          <Card
-            title='Disabled'
-            size='small'
-            loading={metadataLoading}
-            bodyStyle={{ textAlign: 'center' }}
-            headStyle={{ textAlign: 'center '}}
-          >
-            <Switch defaultChecked={disabled} onChange={regimeDisabledChanged} />
-          </Card>
+        <Col xs={8} sm={6} md={4}>
+          <BracketTypeCard tournamentRegimeId={props.tournamentRegimeId} bracketTypeId={bracketTypeId} loading={metadataLoading} />
+        </Col>
+        <Col xs={8} sm={6} md={4}>
+          <DisabledFlagCard tournamentRegimeId={props.tournamentRegimeId} disabled={disabled} loading={metadataLoading} />
+        </Col>
+      </Row>
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Tournament Regime Description</Divider>
+        </Col>
+      </Row>
+      <Row justify='center'>
+        <Col xs={20} sm={16} md={12}>
+          <Input.TextArea
+            allowClear
+            maxLength={500}
+            rows={4}
+            showCount
+            value={regimeDescription}
+            onChange={regimeDescriptionChanged}
+          />
+        </Col>
+      </Row>
+      <Row justify='center'>
+        <Button
+          type='primary'
+          size='small'
+          loading={descriptionUpdateLoading}
+          onClick={updateRegimeDescription}
+          style={{ marginTop: 8, marginBottom: 8 }}
+        >
+          Update Regime Description
+        </Button>
+      </Row>
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Tournament Slots</Divider>
         </Col>
       </Row>
       <Row justify='center'>
@@ -128,47 +153,7 @@ function TournamentRegimePage(props) {
       </Row>
       <Row justify='center'>
         <Col span={20}>
-          <Table
-            dataSource={regimeSlots}
-            loading={regimeSlotsLoading}
-            pagination={false}
-            rowKey='TournamentSlotId'
-            size='small'
-          >
-            <Column
-              align='left'
-              dataIndex='TournamentSlotName'
-              title='Name'
-            />
-            <Column
-              align='center'
-              dataIndex='Seed'
-              title='Seed'
-            />
-            <Column
-              align='center'
-              dataIndex='Region'
-              title='Region'
-            />
-            <Column
-              align='right'
-              render={(text, record) => {
-                return (
-                  <Button
-                    type='primary'
-                    danger
-                    size='small'
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      removeSlot(record.TournamentSlotId)
-                    }}
-                  >
-                    Remove
-                  </Button>
-                );
-              }}
-            />
-          </Table>
+          <TournamentSlotsTable tournamentRegimeId={props.tournamentRegimeId} />
         </Col>
       </Row>
     </Content>
