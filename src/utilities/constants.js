@@ -28,7 +28,11 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   DELETE_TOURNAMENT: '/deleteTournament',
   SET_TOURNAMENT_ADMIN_FLAG: '/setTournamentAdminFlag',
   SET_TOURNAMENT_DISABLED_FLAG: '/setTournamentDisabledFlag',
-  SET_TOURNAMENT_REGIME_PHASES: '/setTournamentRegimePhases'
+  SET_TOURNAMENT_REGIME_PHASES: '/setTournamentRegimePhases',
+  SET_TOURNAMENT_REGIME_DESCRIPTION: '/setTournamentRegimeDescription',
+  SET_TOURNAMENT_REGIME_BRACKET_TYPE: '/setTournamentRegimeBracketType',
+  SET_TOURNAMENT_REGIME_DISABLED_FLAG: '/setTournamentRegimeDisabledFlag',
+  SET_TOURNAMENT_REGIME_ADMIN_FLAG: '/setTournamentRegimeAdminFlag'
 };
 
 export const SPORTS_SERVICE_ENDPOINTS = {
