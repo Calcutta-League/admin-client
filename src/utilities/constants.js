@@ -23,6 +23,7 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   NEW_TOURNAMENT: '/newTournament',
   NEW_TOURNAMENT_PHASE: '/newTournamentPhase',
   NEW_TOURNAMENT_REGIME: '/newTournamentRegime',
+  NEW_TOURNAMENT_SLOT: '/newTournamentSlot',
   DELETE_TOURNAMENT_PHASE: '/deleteTournamentPhase',
   DELETE_TOURNAMENT_REGIME: '/deleteTournamentRegime',
   DELETE_TOURNAMENT: '/deleteTournament',
@@ -32,9 +33,11 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   SET_TOURNAMENT_REGIME_DESCRIPTION: '/setTournamentRegimeDescription',
   SET_TOURNAMENT_REGIME_BRACKET_TYPE: '/setTournamentRegimeBracketType',
   SET_TOURNAMENT_REGIME_DISABLED_FLAG: '/setTournamentRegimeDisabledFlag',
-  SET_TOURNAMENT_REGIME_ADMIN_FLAG: '/setTournamentRegimeAdminFlag'
+  SET_TOURNAMENT_REGIME_ADMIN_FLAG: '/setTournamentRegimeAdminFlag',
+  SET_TOURNAMENT_SLOT_TEAM: '/setTournamentSlotTeam'
 };
 
 export const SPORTS_SERVICE_ENDPOINTS = {
-  GET_SPORTS: '/getSports'
+  GET_SPORTS: '/getSports',
+  GET_TEAMS_BY_SPORT_ID: '/getTeamsBySportId'
 }

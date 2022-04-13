@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, message } from 'antd';
+import { Table, Button, message, Space } from 'antd';
 import { useTournamentState } from '../../context/tournamentContext';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import useData from '../../hooks/useData';
+import { ButtonTableCell } from '../buttonTableCell';
 
 const { Column } = Table;
 
@@ -28,6 +29,11 @@ function TournamentSlotsTable(props) {
     }
   }, [slotsReturnDate]);
 
+  const editSlot = (slot) => {
+    console.log(slot);
+    message.error('Not implemented yet');
+  }
+
   const removeSlot = () => {
     message.error('Not implemented yet');
   }
@@ -46,6 +52,11 @@ function TournamentSlotsTable(props) {
         title='Name'
       />
       <Column
+        align='left'
+        dataIndex='TeamName'
+        title='Team'
+      />
+      <Column
         align='center'
         dataIndex='Seed'
         title='Seed'
@@ -59,17 +70,29 @@ function TournamentSlotsTable(props) {
         align='right'
         render={(text, record) => {
           return (
-            <Button
-              type='primary'
-              danger
-              size='small'
-              onClick={(event) => {
-                event.stopPropagation();
-                removeSlot(record.TournamentSlotId)
-              }}
-            >
-              Remove
-            </Button>
+            <Space>
+              <Button
+                type='primary'
+                size='small'
+                onClick={(event) => {
+                  event.stopPropagation();
+                  editSlot(record);
+                }}
+              >
+                Edit
+              </Button>
+              <ButtonTableCell
+                type='primary'
+                danger
+                size='small'
+                onClick={(event) => {
+                  event.stopPropagation();
+                  removeSlot(record.TournamentSlotId)
+                }}
+              >
+                Remove
+              </ButtonTableCell>
+            </Space>
           );
         }}
       />

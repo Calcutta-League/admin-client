@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Typography, Row, Col, Card, Switch, Button, Divider, message, Input } from 'antd';
+import { Layout, Typography, Row, Col, Card, Switch, Button, Divider, message, Input, Modal } from 'antd';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import useData from '../../hooks/useData';
 import TournamentSlotsTable from './tournamentSlotsTable';
 import { AdminFlagCard, BracketTypeCard, DisabledFlagCard } from './metadataCards';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
+import NewTournamentSlotForm from './newTournamentSlotForm';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -67,14 +68,13 @@ function TournamentRegimePage(props) {
     }
   }, [descriptionUpdateReturnDate]);
 
+  const [newSlotVisible, setNewSlotVisible] = useState(false);
+
+
   // todo endpoints:
     // Bulk Load
     // Single Load
     // Single Remove
-
-  const bulkLoadTournamentSlots = () => {
-
-  }
 
   const regimeDescriptionChanged = ({ target: { value }}) => {
     setRegimeDescription(value);
@@ -90,6 +90,26 @@ function TournamentRegimePage(props) {
 
     setDescriptionTrigger(new Date().valueOf());
     setAllowDescriptionUpdate(true);
+  }
+
+  const newTournamentSlot = () => {
+    setNewSlotVisible(true);
+  }
+
+  const bulkLoadTournamentSlots = () => {
+    message.error('Not implemented yet');
+  }
+
+  const dismissNewSlotModal = (triggerSlotsDownload) => {
+    dismiss();
+
+    if (triggerSlotsDownload) {
+      tournamentDispatch({ type: 'update', key: 'slotsTrigger', value: new Date().valueOf() });
+    }
+  }
+
+  const dismiss = () => {
+    setNewSlotVisible(false);
   }
 
   return (
@@ -145,6 +165,15 @@ function TournamentRegimePage(props) {
         <Button
           type='primary'
           size='small'
+          onClick={newTournamentSlot}
+          style={{ marginTop: 8, marginBottom: 8 }}
+        >
+          New Slot
+        </Button>
+        <Button
+          type='primary'
+          size='small'
+          disabled
           onClick={bulkLoadTournamentSlots}
           style={{ marginTop: 8, marginBottom: 8 }}
         >
@@ -155,6 +184,19 @@ function TournamentRegimePage(props) {
         <Col span={20}>
           <TournamentSlotsTable tournamentRegimeId={props.tournamentRegimeId} />
         </Col>
+        <Modal
+          visible={newSlotVisible}
+          width={720}
+          title='New Tournament Slot(s)'
+          onCancel={dismiss}
+          footer={null}
+        >
+          <NewTournamentSlotForm
+            sportId={props.location.state.sportId}
+            tournamentRegimeId={props.tournamentRegimeId}
+            dismiss={dismissNewSlotModal}
+          />
+        </Modal>
       </Row>
     </Content>
   );
