@@ -81,8 +81,13 @@ function TournamentRegimeTable(props) {
     message.error('Not Implemented Yet');
   }
 
-  const navigateToRegimePage = (tournamentRegimeId, tournamentRegimeName) => {
-    navigate(`/tournaments/tournamentRegime/${tournamentRegimeId}`, { state: { tournamentRegimeName: tournamentRegimeName } });
+  const navigateToRegimePage = (tournamentRegimeId, tournamentRegimeName, sportId) => {
+    navigate(`/tournaments/tournamentRegime/${tournamentRegimeId}`, { 
+      state: { 
+        tournamentRegimeName: tournamentRegimeName,
+        sportId: sportId
+      }
+    });
   }
 
   const getRowClass = (record) => {
@@ -155,7 +160,7 @@ function TournamentRegimeTable(props) {
                 size='small'
                 onClick={(event) => {
                   event.stopPropagation()
-                  navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName)
+                  navigateToRegimePage(record.TournamentRegimeId, record.TournamentRegimeName, record.SportId)
                 }}
               >
                 Setup
