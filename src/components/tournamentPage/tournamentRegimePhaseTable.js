@@ -11,11 +11,18 @@ const { Column } = Table;
 function TournamentRegimePhaseTable() {
 
   const [regimePhasesLoading, setRegimePhasesLoading] = useState(false);
+  const [phases, setPhases] = useState(null);
 
   const { authenticated } = useAuthState();
   const { selectedRegimeId, regimePhaseRefreshTrigger } = useTournamentState();
 
   const tournamentDispatch = useTournamentDispatch();
+
+  useEffect(() => {
+    return (() => {
+      setPhases(null);
+    });
+  }, []);
 
   const [regimePhases, regimePhasesReturnDate] = useData({
     baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
@@ -26,7 +33,10 @@ function TournamentRegimePhaseTable() {
   });
 
   useEffect(() => {
-    tournamentDispatch({ type: 'update', key: 'regimePhaseRefreshTrigger', value: new Date().valueOf() });
+    if (selectedRegimeId) {
+      setRegimePhasesLoading(true);
+      tournamentDispatch({ type: 'update', key: 'regimePhaseRefreshTrigger', value: new Date().valueOf() });
+    }
   }, [selectedRegimeId]);
 
   useEffect(() => {
@@ -37,6 +47,7 @@ function TournamentRegimePhaseTable() {
 
     // data returned after the latest refresh request
     if ((regimePhaseRefreshTrigger || 0) <= regimePhasesReturnDate) {
+      setPhases(regimePhases);
       setRegimePhasesLoading(false);
     }
   }, [regimePhaseRefreshTrigger, regimePhasesReturnDate]);
@@ -48,7 +59,7 @@ function TournamentRegimePhaseTable() {
 
   return (
     <Table
-      dataSource={regimePhases}
+      dataSource={phases}
       loading={regimePhasesLoading}
       pagination={false}
       rowKey='TournamentPhaseId'

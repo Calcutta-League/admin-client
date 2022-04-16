@@ -53,6 +53,7 @@ function SportTeamsSelect(props) {
         return option.props.children.toString().toLowerCase().includes(inputValue.toLowerCase());
       }}
       onChange={teamSelected}
+      defaultValue={props.value || null}
     >
       {generateTeamOptions()}
     </Select>
