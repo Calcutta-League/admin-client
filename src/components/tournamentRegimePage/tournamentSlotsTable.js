@@ -65,6 +65,7 @@ function TournamentSlotsTable(props) {
         pagination={false}
         rowKey='TournamentSlotId'
         size='small'
+        scroll={{ y: 500 }}
       >
         <Column
           align='left'
