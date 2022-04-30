@@ -3,6 +3,7 @@ import { Divider, Modal, Row, Col, Button, message } from 'antd';
 import NewTournamentRegimePhaseForm from './newTournamentRegimePhaseForm';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 import TournamentRegimePhaseTable from './tournamentRegimePhaseTable';
+import { useEffect } from 'react/cjs/react.production.min';
 
 function TournamentRegimePhases(props) {
 

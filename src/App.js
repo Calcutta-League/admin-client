@@ -30,7 +30,7 @@ function App() {
               <Sidenav />
 
               <Layout>
-                <Content>
+                <Content style={{ overflow: 'auto', paddingBottom: '12px' }}>
                   <Router>
                     <Games path='/games' />
                     <TournamentProvider path='/tournaments'>

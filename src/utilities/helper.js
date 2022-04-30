@@ -35,8 +35,18 @@ const dateTimeDisplay = (dateString) => {
   return date.toLocaleDateString();
 }
 
+/**
+ * @function toPercentage
+ * @param {Number} value - the value to turn into a percentage string
+ * @param {Number} [precision] - the number of decimals to display. default to 2
+ */
+const toPercentage = (value, precision = 2) => {
+  return `${(value * 100).toFixed(precision)} %`;
+}
+
 export {
   calcuttaStore,
   teamDisplayName,
-  dateTimeDisplay
+  dateTimeDisplay,
+  toPercentage
 };

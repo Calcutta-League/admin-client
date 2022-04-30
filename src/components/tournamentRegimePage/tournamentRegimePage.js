@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Layout, Typography, Row, Col, Card, Switch, Button, Divider, message, Input, Modal } from 'antd';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Typography, Row, Col, Button, Divider, message, Input, Modal } from 'antd';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import useData from '../../hooks/useData';
@@ -7,8 +7,8 @@ import TournamentSlotsTable from './tournamentSlotsTable';
 import { AdminFlagCard, BracketTypeCard, DisabledFlagCard } from './metadataCards';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 import NewTournamentSlotForm from './newTournamentSlotForm';
+import TournamentRegimePayouts from './tournamentRegimePayouts';
 
-const { Content } = Layout;
 const { Title } = Typography;
 
 function TournamentRegimePage(props) {
@@ -113,7 +113,7 @@ function TournamentRegimePage(props) {
   }
 
   return (
-    <Content>
+    <Fragment>
       <Row justify='center'>
         <Title level={1}>{props.location.state.tournamentRegimeName}</Title>
       </Row>
@@ -182,7 +182,7 @@ function TournamentRegimePage(props) {
       </Row>
       <Row justify='center'>
         <Col span={20}>
-          <TournamentSlotsTable tournamentRegimeId={props.tournamentRegimeId} />
+          <TournamentSlotsTable tournamentRegimeId={props.tournamentRegimeId} sportId={props.location.state.sportId} />
         </Col>
         <Modal
           visible={newSlotVisible}
@@ -198,7 +198,13 @@ function TournamentRegimePage(props) {
           />
         </Modal>
       </Row>
-    </Content>
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Default Payout Settings</Divider>
+        </Col>
+      </Row>
+      <TournamentRegimePayouts tournamentRegimeId={props.tournamentRegimeId} />
+    </Fragment>
   );
 }
 
