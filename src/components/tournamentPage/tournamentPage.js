@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Layout, Switch, Card, message } from 'antd';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Row, Col, Typography, Switch, Card } from 'antd';
 import 'antd/dist/antd.css';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
@@ -7,8 +7,8 @@ import TournamentPhases from './tournamentPhases';
 import TournamentRegimes from './tournamentRegimes';
 import useData from '../../hooks/useData';
 import TournamentRegimePhases from './tournamentRegimePhases';
+import { useTournamentDispatch } from '../../context/tournamentContext';
 
-const { Content } = Layout;
 const { Title } = Typography;
 
 function TournamentPage(props) {
@@ -29,6 +29,8 @@ function TournamentPage(props) {
   const [disabledFlagAllowed, setDisabledFlagAllowed] = useState(false);
 
   const { authenticated } = useAuthState();
+
+  const tournamentDispatch = useTournamentDispatch();
 
   const [metadata, metadataReturnDate] = useData({
     baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
@@ -54,7 +56,14 @@ function TournamentPage(props) {
     refreshTrigger: triggerDisabledFlag,
     payload: disabledFlagPayload,
     conditions: [authenticated, disabledFlagAllowed, !!triggerDisabledFlag]
-  })
+  });
+
+  useEffect(() => {
+    return (() => {
+      tournamentDispatch({ type: 'update', key: 'selectedRegimeId', value: null });
+      tournamentDispatch({ type: 'update', key: 'regimePhaseRefreshTrigger', value: null });
+    })
+  }, []);
 
   useEffect(() => {
     if (metadata && metadata.length) {
@@ -112,7 +121,7 @@ function TournamentPage(props) {
   }
 
   return (
-    <Content>
+    <Fragment>
       <Row justify='center'>
         <Title level={1}>{name}</Title>
       </Row>
@@ -143,7 +152,7 @@ function TournamentPage(props) {
       <TournamentPhases tournamentId={props.tournamentId} />
       <TournamentRegimes tournamentId={props.tournamentId} />
       <TournamentRegimePhases tournamentId={props.tournamentId} />
-    </Content>
+    </Fragment>
   );
 }
 
