@@ -7,6 +7,7 @@ import TournamentSlotsTable from './tournamentSlotsTable';
 import { AdminFlagCard, BracketTypeCard, DisabledFlagCard } from './metadataCards';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 import NewTournamentSlotForm from './newTournamentSlotForm';
+import TournamentRegimePayouts from './tournamentRegimePayouts';
 
 const { Title } = Typography;
 
@@ -197,6 +198,12 @@ function TournamentRegimePage(props) {
           />
         </Modal>
       </Row>
+      <Row justify='center'>
+        <Col span={20}>
+          <Divider orientation='left'>Default Payout Settings</Divider>
+        </Col>
+      </Row>
+      <TournamentRegimePayouts tournamentRegimeId={props.tournamentRegimeId} />
     </Fragment>
   );
 }
