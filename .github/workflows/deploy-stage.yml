@@ -16,14 +16,14 @@ jobs:
     #   id-token: 'write'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       # - id: 'auth'
       #   name: 'Authenticate to Google Cloud'
       #   uses: 'google-github-actions/auth@v1'
       #   with:
       #     credentials_json: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
       - name: use nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: '16.x'
       - run: npm install -g firebase-tools
