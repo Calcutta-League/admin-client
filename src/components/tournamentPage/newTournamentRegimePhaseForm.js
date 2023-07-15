@@ -64,10 +64,10 @@ function NewTournamentRegimePhaseForm(props) {
   }, [updateRegimePhaseReturnDate]);
 
   const generatePhaseList = () => {
-    if (!phasesReturnDate || !regimePhasesReturnDate) {
+    if (!phasesReturnDate || !regimePhasesReturnDate || regimePhases == null) {
       return <Skeleton active />;
     }
-
+    
     return phases.map(phase => {
       const phaseId = phase.TournamentPhaseId;
       const regimePhaseMatch = regimePhases.find(regimePhase => regimePhase.TournamentPhaseId == phaseId);
