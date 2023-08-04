@@ -11,10 +11,6 @@ jobs:
     environment: stage
     runs-on: ubuntu-latest
 
-    # permissions:
-    #   contents: 'read'
-    #   id-token: 'write'
-
     steps:
       - uses: actions/checkout@v3
       - name: use nodejs
@@ -30,11 +26,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: ${{ env.FIREBASE_PROJECT_ID }}
           channelId: live
-      # - run: |
-      #     firebase use --add $FIREBASE_PROJECT_ID
-      #     firebase deploy --only hosting # --token $FIREBASE_TOKEN
   
 env:
-  # FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
   FIREBASE_PROJECT_ID: calcutta-admin-test
   REACT_APP_BUILD_ENV: dev
