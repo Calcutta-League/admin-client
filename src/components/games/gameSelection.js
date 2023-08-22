@@ -48,16 +48,16 @@ function GameSelection() {
   }
 
   return (
-    <Input.Group size='medium'>
+    // <Input.Group size='medium'>
       <Row gutter={[0, 32]} justify='center' style={{ marginTop: '16px' }}>
         <Col>
-          <Select style={{ width: '280px', margin: '0 12px' }} value={sportId} onChange={handleSportSelection}>
+          <Select style={{ width: '280px', margin: '8px 12px' }} value={sportId} onChange={handleSportSelection}>
             {generateOptions()}
           </Select>
           <DatePicker 
-            style={{ width: '280px', margin: '0 12px', justifyContent: 'center' }}
+            style={{ width: '280px', margin: '8px 12px', justifyContent: 'center' }}
             onChange={handleDateSelection}
-            dateRender={(current) => {
+            cellRender={(current) => {
               let [numGames, numUnscoredGames] = getGamesCountByDate(current.format('YYYY-MM-DD'), gamesMetadataArr);
 
               let style = getDatePickerStyleByDate(current.format('YYYY-MM-DD'), numGames, numUnscoredGames);
@@ -71,7 +71,7 @@ function GameSelection() {
           />
         </Col>
       </Row>
-    </Input.Group>
+    // </Input.Group>
   );
 }
 

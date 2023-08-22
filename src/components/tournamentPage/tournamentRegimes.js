@@ -33,7 +33,7 @@ function TournamentRegimes(props) {
           <Divider orientation='left'>Tournament Regimes</Divider>
           <TournamentRegimeTable tournamentId={props.tournamentId} />
           <Modal
-            visible={visible}
+            open={visible}
             width={720}
             title='New Tournament Regime'
             onCancel={dismiss}

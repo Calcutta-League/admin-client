@@ -2,11 +2,41 @@ import React from 'react';
 import { Menu, Layout } from 'antd';
 import { UserOutlined, TrophyOutlined, TableOutlined, FireOutlined, DeploymentUnitOutlined } from '@ant-design/icons';
 import { useNavState, useNavDispatch } from '../../context/navContext';
-import { navigate } from '@reach/router';
+import { useNavigate } from 'react-router-dom';
 
 const { Sider } = Layout;
 
+const menuItems = [
+  {
+    key: 'games',
+    icon: <FireOutlined />,
+    label: 'Games'
+  },
+  {
+    key: 'sports',
+    icon: <DeploymentUnitOutlined />,
+    label: 'Sports'
+  },
+  {
+    key: 'tournaments',
+    icon: <TrophyOutlined />,
+    label: 'Tournaments'
+  },
+  {
+    key: 'leagues',
+    icon: <TableOutlined />,
+    label: 'Leagues'
+  },
+  {
+    key: 'users',
+    icon: <UserOutlined />,
+    label: 'Users'
+  }
+];
+
 function Sidenav() {
+
+  const navigate = useNavigate();
 
   const { selectedMenuItem } = useNavState();
 
@@ -26,23 +56,8 @@ function Sidenav() {
         defaultSelectedKeys={['games']}
         selectedKeys={[selectedMenuItem]}
         style={{ height: '100%', borderRight: 0 }}
-      >
-        <Menu.Item key='games' icon={<FireOutlined />}>
-          Games
-        </Menu.Item>
-        <Menu.Item key='sports' icon={<DeploymentUnitOutlined />}>
-          Sports
-        </Menu.Item>
-        <Menu.Item key='tournaments' icon={<TrophyOutlined />}>
-          Tournaments
-        </Menu.Item>
-        <Menu.Item key='leagues' icon={<TableOutlined />}>
-          Leagues
-        </Menu.Item>
-        <Menu.Item key='users' icon={<UserOutlined />}>
-          Users
-        </Menu.Item>
-      </Menu>
+        items={menuItems}
+      />
     </Sider>
   )
 }

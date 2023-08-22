@@ -33,7 +33,7 @@ function TournamentPhases(props) {
           <Divider orientation='left'>Tournament Phases</Divider>
           <TournamentPhaseTable tournamentId={props.tournamentId} />
           <Modal
-            visible={visible}
+            open={visible}
             title='New Tournament Phase'
             onCancel={dismiss}
             footer={null}

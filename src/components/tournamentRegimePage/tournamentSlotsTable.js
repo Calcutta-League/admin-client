@@ -119,7 +119,7 @@ function TournamentSlotsTable(props) {
         />
       </Table>
       <Modal
-        visible={visible}
+        open={visible}
         title='Update Slot'
         onCancel={dismiss}
         footer={null}

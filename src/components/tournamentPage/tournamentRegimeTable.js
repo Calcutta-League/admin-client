@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Switch, Button, message, Space } from 'antd';
-import 'antd/dist/antd.css';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
-import { navigate } from '@reach/router';
 import useData from '../../hooks/useData';
 import { ButtonTableCell } from '../buttonTableCell';
+import { useNavigate } from 'react-router-dom';
 
 const { Column } = Table;
 
 function TournamentRegimeTable(props) {
+
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [triggerDelete, setTriggerDelete] = useState(null);
