@@ -53,7 +53,7 @@ function AuthModal() {
 
   return (
     <Modal
-      visible={authModalVisible}
+      open={authModalVisible}
       onCancel={handleCancel}
       closable={false}
       maskClosable={true}

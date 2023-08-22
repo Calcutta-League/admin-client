@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, message } from 'antd';
-import 'antd/dist/antd.css';
+import { Table, message } from 'antd';
 import { useAuthState } from '../../context/authContext';
-import TournamentService from '../../services/tournament/tournament.service';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { ButtonTableCell } from '../buttonTableCell';
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';

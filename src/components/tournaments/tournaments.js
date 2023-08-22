@@ -1,13 +1,13 @@
 import React, { useState, Fragment } from 'react';
 import { Button, Modal, Row } from 'antd';
-import 'antd/dist/antd.css';
-import { TournamentProvider } from '../../context/tournamentContext';
 import TournamentTable from './tournamentTable';
 import NewTournamentForm from './newTournamentForm';
 import './tournamentStyle.css';
-import { navigate } from '@reach/router';
+import { useNavigate } from 'react-router-dom';
 
 function Tournaments() {
+
+  const navigate = useNavigate();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -40,7 +40,7 @@ function Tournaments() {
         </Button>
       </Row>
       <Modal
-        visible={modalVisible}
+        open={modalVisible}
         title='New Tournament'
         onCancel={hideNewTournamentModal}
         footer={null}

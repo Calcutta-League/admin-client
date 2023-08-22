@@ -131,7 +131,7 @@ function TournamentRegimePayoutTable(props) {
         />
       </Table>
       <Modal
-        visible={visible}
+        open={visible}
         title='Update Payout'
         onCancel={dismiss}
         footer={null}

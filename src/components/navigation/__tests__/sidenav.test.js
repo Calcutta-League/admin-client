@@ -1,9 +1,11 @@
 import { customRender, screen, cleanup, waitFor } from '../../../utilities/test-utils';
 import userEvent from '@testing-library/user-event';
 import Sidenav from '../sidenav';
-import { navigate } from '@reach/router';
+import { useNavigate } from 'react-router-dom';
 
-jest.mock('@reach/router');
+jest.mock('react-router-dom');
+
+const navigate = useNavigate();
 
 afterEach(() => {
   cleanup();
