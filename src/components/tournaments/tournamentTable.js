@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, message, Row, Table } from 'antd';
+import { Col, message, Row, Table, Space } from 'antd';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import { ButtonTableCell } from '../buttonTableCell';
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const { Column } = Table;
 
-function TournamentTable() {
+function TournamentTable(props) {
 
   const navigate = useNavigate();
 
@@ -38,6 +38,19 @@ function TournamentTable() {
     conditions: [authenticated, deleteFlag, !!deleteTrigger]
   });
 
+  const [markTournamentCompleteResponse, markTournamentCompleteReturnDate, sendMarkTournamentCompleteRequest] = useData({
+    baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
+    endpoint: TOURNAMENT_SERVICE_ENDPOINTS.OVERRIDE_TOURNAMENT_STATUS,
+    method: 'POST',
+    // this is a hacky way to ensure we don't prematurely call this endpoint. A long term fix is to replace useData() with the version used in the march-madness-calcutta repo
+    conditions: [false] // we call this endpoint manually, so we force the conditions to be false
+  });
+
+  const refreshTournaments = () => {
+    setTriggerTournaments(new Date().valueOf());
+    setTableLoading(true);
+  }
+
   useEffect(() => {
     if (tournaments && tournaments.length > 0) {
       setTableLoading(false);
@@ -45,17 +58,29 @@ function TournamentTable() {
   }, [tournamentsReturnDate]);
 
   useEffect(() => {
+    console.log(markTournamentCompleteResponse);
+    if (markTournamentCompleteResponse && markTournamentCompleteResponse.length && markTournamentCompleteResponse[0]?.Error) {
+      message.error(markTournamentCompleteResponse[0].Error);
+    }
+
+    refreshTournaments();
+  }, [markTournamentCompleteReturnDate]);
+
+  useEffect(() => {
     if (deleteTournamentResponse && deleteTournamentResponse.length && deleteTournamentResponse[0]?.Error) {
       message.error(deleteTournamentResponse[0].Error);
     }
 
     setDeleteFlag(false);
-    setTriggerTournaments(new Date().valueOf());
-    setTableLoading(true);
+    refreshTournaments();
   }, [deleteTournamentReturnDate]);
 
   const tournamentClicked = (tournament) => {
     navigate(`/tournaments/${tournament.TournamentId}`);
+  }
+
+  const markTournamentComplete = (tournamentId) => {
+    sendMarkTournamentCompleteRequest({ tournamentIds: [tournamentId] });
   }
 
   const deleteTournament = (tournamentId) => {
@@ -115,17 +140,33 @@ function TournamentTable() {
             width={120}
             render={(text, record) => {
               return (
-                <ButtonTableCell
-                  type='primary'
-                  danger
-                  size='small'
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    deleteTournament(record.TournamentId);
-                  }}
-                >
-                  Delete
-                </ButtonTableCell>
+                <Space>
+                  { record.Status != 'Complete' ?
+                    <ButtonTableCell
+                      type='primary'
+                      size='small'
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        markTournamentComplete(record.TournamentId);
+                      }}
+                    >
+                      Mark Complete
+                    </ButtonTableCell>
+                    :
+                    null
+                  }
+                  <ButtonTableCell
+                    type='primary'
+                    danger
+                    size='small'
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      deleteTournament(record.TournamentId);
+                    }}
+                  >
+                    Delete
+                  </ButtonTableCell>
+                </Space>
               );
             }}
           />

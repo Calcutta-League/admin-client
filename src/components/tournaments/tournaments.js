@@ -28,7 +28,7 @@ function Tournaments() {
 
   return (
     <Fragment>
-      <TournamentTable />
+      <TournamentTable scrollY={500} />
       <Row justify='center'>
         <Button
           type='primary'

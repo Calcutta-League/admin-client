@@ -85,7 +85,24 @@ function useData({ baseUrl, endpoint, method, headers = {}, payload = {}, proces
     });
   };
 
-  return [data, fetchDate];
+  /**
+   * @function
+   * @description manual option for calling the API endpoint with an arbitrary payload. This method bypasses the conditions check and immediately sends the HTTP request
+   * @param {Object} payload - payload for the HTTP request
+   */
+  const callApi = (payload) => {
+    const options = generateRequestOptions({ endpoint, method, headers, payload });
+
+    setData(null);
+    axios(options).then(response => {
+      setData(processJson(response.data));
+      setFetchDate(new Date().valueOf());
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  return [data, fetchDate, callApi];
 };
 
 export default useData;
