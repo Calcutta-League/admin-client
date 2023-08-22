@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Select } from 'antd';
-import 'antd/dist/antd.css';
 import useData from '../../hooks/useData';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';

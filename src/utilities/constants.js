@@ -35,7 +35,8 @@ export const TOURNAMENT_SERVICE_ENDPOINTS = {
   SET_TOURNAMENT_REGIME_BRACKET_TYPE: '/setTournamentRegimeBracketType',
   SET_TOURNAMENT_REGIME_DISABLED_FLAG: '/setTournamentRegimeDisabledFlag',
   SET_TOURNAMENT_REGIME_ADMIN_FLAG: '/setTournamentRegimeAdminFlag',
-  UPDATE_TOURNAMENT_SLOT: '/updateTournamentSlot'
+  UPDATE_TOURNAMENT_SLOT: '/updateTournamentSlot',
+  OVERRIDE_TOURNAMENT_STATUS: '/overrideTournamentStatus'
 };
 
 export const SPORTS_SERVICE_ENDPOINTS = {

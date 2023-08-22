@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Row, Col, Typography, Switch, Card } from 'antd';
-import 'antd/dist/antd.css';
 import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import TournamentPhases from './tournamentPhases';
@@ -8,10 +7,15 @@ import TournamentRegimes from './tournamentRegimes';
 import useData from '../../hooks/useData';
 import TournamentRegimePhases from './tournamentRegimePhases';
 import { useTournamentDispatch } from '../../context/tournamentContext';
+import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
-function TournamentPage(props) {
+function TournamentPage() {
+
+  const location = useLocation();
+
+  const [tournamentId, setTournamentId] = useState(null);
 
   const [name, setName] = useState(null);
   const [adminOnly, setAdminOnly] = useState(null);
@@ -34,10 +38,10 @@ function TournamentPage(props) {
 
   const [metadata, metadataReturnDate] = useData({
     baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
-    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_METADATA}/${props.tournamentId}`,
+    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_METADATA}/${tournamentId}`,
     method: 'GET',
     refreshTrigger: triggerMetadata,
-    conditions: [authenticated]
+    conditions: [authenticated, tournamentId]
   });
 
   const [adminFlagResponse, adminFlagReturnDate] = useData({
@@ -46,7 +50,7 @@ function TournamentPage(props) {
     method: 'POST',
     refreshTrigger: triggerAdminOnly,
     payload: adminOnlyPayload,
-    conditions: [authenticated, adminOnlyFlag, !!triggerAdminOnly]
+    conditions: [authenticated, adminOnlyFlag, !!triggerAdminOnly, tournamentId]
   });
 
   const [disabledFlagResponse, disabledFlagReturnDate] = useData({
@@ -55,10 +59,14 @@ function TournamentPage(props) {
     method: 'POST',
     refreshTrigger: triggerDisabledFlag,
     payload: disabledFlagPayload,
-    conditions: [authenticated, disabledFlagAllowed, !!triggerDisabledFlag]
+    conditions: [authenticated, disabledFlagAllowed, !!triggerDisabledFlag, tournamentId]
   });
 
   useEffect(() => {
+
+    const parsedTournamentId = +location.pathname.match(/\d{1,}($|(?=\/))/ig)[0];
+    setTournamentId(parsedTournamentId);
+    
     return (() => {
       tournamentDispatch({ type: 'update', key: 'selectedRegimeId', value: null });
       tournamentDispatch({ type: 'update', key: 'regimePhaseRefreshTrigger', value: null });
@@ -98,7 +106,7 @@ function TournamentPage(props) {
     setAdminOnly(value);
 
     const data = {
-      tournamentId: props.tournamentId,
+      tournamentId: tournamentId,
       adminFlag: value
     };
 
@@ -111,7 +119,7 @@ function TournamentPage(props) {
     setDisabled(value);
 
     const data = {
-      tournamentId: props.tournamentId,
+      tournamentId: tournamentId,
       disabledFlag: value
     }
 
@@ -149,9 +157,9 @@ function TournamentPage(props) {
           </Card>
         </Col>
       </Row>
-      <TournamentPhases tournamentId={props.tournamentId} />
-      <TournamentRegimes tournamentId={props.tournamentId} />
-      <TournamentRegimePhases tournamentId={props.tournamentId} />
+      <TournamentPhases tournamentId={tournamentId} />
+      <TournamentRegimes tournamentId={tournamentId} />
+      <TournamentRegimePhases tournamentId={tournamentId} />
     </Fragment>
   );
 }

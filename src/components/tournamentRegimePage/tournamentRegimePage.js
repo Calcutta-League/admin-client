@@ -8,10 +8,15 @@ import { AdminFlagCard, BracketTypeCard, DisabledFlagCard } from './metadataCard
 import { useTournamentDispatch, useTournamentState } from '../../context/tournamentContext';
 import NewTournamentSlotForm from './newTournamentSlotForm';
 import TournamentRegimePayouts from './tournamentRegimePayouts';
+import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
-function TournamentRegimePage(props) {
+function TournamentRegimePage() {
+
+  const location = useLocation();
+
+  const [tournamentRegimeId, setTournamentRegimeId] = useState(null);
 
   const [metadataLoading, setMetadataLoading] = useState(true);
   const [adminOnly, setAdminOnly] = useState(false);
@@ -27,11 +32,17 @@ function TournamentRegimePage(props) {
 
   const [metadata, metadataReturnDate] = useData({
     baseUrl: API_CONFIG.TOURNAMENT_SERVICE_BASE_URL,
-    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_METADATA}/${props.tournamentRegimeId}`,
+    endpoint: `${TOURNAMENT_SERVICE_ENDPOINTS.GET_TOURNAMENT_REGIME_METADATA}/${tournamentRegimeId}`,
     method: 'GET',
     refreshTrigger: tournamentRegimeMetadataTrigger,
-    conditions: [authenticated]
+    conditions: [authenticated, tournamentRegimeId]
   });
+
+  useEffect(() => {
+    console.log(location);
+    const parsedTournamentRegimeId = +location.pathname.match(/\d{1,}($|(?=\/))/ig)[0];
+    setTournamentRegimeId(parsedTournamentRegimeId);
+  }, []);
 
   useEffect(() => {
     if (metadataReturnDate && metadata.length > 0) {
@@ -84,7 +95,7 @@ function TournamentRegimePage(props) {
     setDescriptionUpdateLoading(true);
     
     setDescriptionPayload({
-      tournamentRegimeId: props.tournamentRegimeId,
+      tournamentRegimeId: tournamentRegimeId,
       description: regimeDescription
     });
 
@@ -115,17 +126,17 @@ function TournamentRegimePage(props) {
   return (
     <Fragment>
       <Row justify='center'>
-        <Title level={1}>{props.location.state.tournamentRegimeName}</Title>
+        <Title level={1}>{location.state.tournamentRegimeName}</Title>
       </Row>
       <Row justify='space-around'>
         <Col xs={8} sm={6} md={4}>
-          <AdminFlagCard tournamentRegimeId={props.tournamentRegimeId} adminOnly={adminOnly} loading={metadataLoading} />
+          <AdminFlagCard tournamentRegimeId={tournamentRegimeId} adminOnly={adminOnly} loading={metadataLoading} />
         </Col>
         <Col xs={8} sm={6} md={4}>
-          <BracketTypeCard tournamentRegimeId={props.tournamentRegimeId} bracketTypeId={bracketTypeId} loading={metadataLoading} />
+          <BracketTypeCard tournamentRegimeId={tournamentRegimeId} bracketTypeId={bracketTypeId} loading={metadataLoading} />
         </Col>
         <Col xs={8} sm={6} md={4}>
-          <DisabledFlagCard tournamentRegimeId={props.tournamentRegimeId} disabled={disabled} loading={metadataLoading} />
+          <DisabledFlagCard tournamentRegimeId={tournamentRegimeId} disabled={disabled} loading={metadataLoading} />
         </Col>
       </Row>
       <Row justify='center'>
@@ -182,18 +193,18 @@ function TournamentRegimePage(props) {
       </Row>
       <Row justify='center'>
         <Col span={20}>
-          <TournamentSlotsTable tournamentRegimeId={props.tournamentRegimeId} sportId={props.location.state.sportId} />
+          <TournamentSlotsTable tournamentRegimeId={tournamentRegimeId} sportId={location.state.sportId} />
         </Col>
         <Modal
-          visible={newSlotVisible}
+          open={newSlotVisible}
           width={720}
           title='New Tournament Slot(s)'
           onCancel={dismiss}
           footer={null}
         >
           <NewTournamentSlotForm
-            sportId={props.location.state.sportId}
-            tournamentRegimeId={props.tournamentRegimeId}
+            sportId={location.state.sportId}
+            tournamentRegimeId={tournamentRegimeId}
             dismiss={dismissNewSlotModal}
           />
         </Modal>
@@ -203,7 +214,7 @@ function TournamentRegimePage(props) {
           <Divider orientation='left'>Default Payout Settings</Divider>
         </Col>
       </Row>
-      <TournamentRegimePayouts tournamentRegimeId={props.tournamentRegimeId} />
+      <TournamentRegimePayouts tournamentRegimeId={tournamentRegimeId} />
     </Fragment>
   );
 }

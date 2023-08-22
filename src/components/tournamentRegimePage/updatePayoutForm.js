@@ -86,7 +86,7 @@ function UpdatePayoutForm(props) {
       <Form.Item name='payoutTypeId' label='Payout Type'>
         <PayoutTypesSelect />
       </Form.Item>
-      <Form.Item name='isGlobal' label='Global?'>
+      <Form.Item name='isGlobal' label='Global?' valuePropName='checked'>
         <Checkbox />
       </Form.Item>
       <Form.Item name='defaultPayoutRate' label='Default Payout'>
