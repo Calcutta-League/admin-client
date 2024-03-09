@@ -12,6 +12,7 @@ import TournamentPage from './components/tournamentPage/tournamentPage';
 import TournamentRegimePage from './components/tournamentRegimePage/tournamentRegimePage';
 import { TournamentProvider } from './context/tournamentContext';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LegacyLeagues from './components/leaguesPage/legacyLeagues';
 
 const { Header, Content } = Layout;
 
@@ -37,6 +38,7 @@ function App() {
                         <Route path='/tournaments' element={<Tournaments />} />
                         <Route path='/tournaments/:tournamentId' element={<TournamentPage />} />
                         <Route path='/tournaments/tournamentRegime/:tournamentRegimeId' element={<TournamentRegimePage />} />
+                        <Route path='/leagues' element={<LegacyLeagues />} />
                         {/* <Sports path='/sports' />
                         <Tournaments path='/tournaments' />
                         <Leagues path='/leagues' />
