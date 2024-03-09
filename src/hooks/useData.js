@@ -13,6 +13,7 @@ import { useAuthState } from '../context/authContext';
  * @param {Function} options.processData - function for processing data returned by the API
  * @param {Number} options.refreshTrigger - changing this value will trigger another API call with the same configuration
  * @param {Array} options.conditions - a list of conditions that must evaluate to true in order to make the api call
+ * @returns {[Array<Any>, Number, Function]}
  */
 function useData({ baseUrl, endpoint, method, headers = {}, payload = {}, processData, refreshTrigger, conditions = [] }) {
 
