@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Typography, Row, Col, Button, Divider, message, Input, Modal } from 'antd';
-import { API_CONFIG, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
+import { API_CONFIG, MANAGEMENT_SERVICE_ENDPOINTS, TOURNAMENT_SERVICE_ENDPOINTS } from '../../utilities/constants';
 import { useAuthState } from '../../context/authContext';
 import useData from '../../hooks/useData';
 import TournamentSlotsTable from './tournamentSlotsTable';
@@ -24,6 +24,7 @@ function TournamentRegimePage() {
   const [slotCount, setSlotCount] = useState(null);
   const [bracketTypeId, setBracketTypeId] = useState(null);
   const [regimeDescription, setRegimeDescription] = useState('');
+  const [syncSlotsLoading, setSyncSlotsLoading] = useState(false);
 
   const { authenticated } = useAuthState();
   const { tournamentRegimeMetadataTrigger } = useTournamentState();
@@ -70,6 +71,13 @@ function TournamentRegimePage() {
     conditions: [authenticated, allowDescriptionUpdate]
   });
 
+  const [syncResponse, syncResponseReturnDate, syncSlots] = useData({
+    baseUrl: API_CONFIG.MANAGEMENT_SERVICE_BASE_URL,
+    endpoint: MANAGEMENT_SERVICE_ENDPOINTS.SYNCHRONIZE_SLOTS,
+    method: 'POST',
+    conditions: [false]
+  });
+
   useEffect(() => {
     setAllowDescriptionUpdate(false);
     setDescriptionUpdateLoading(false);
@@ -78,6 +86,16 @@ function TournamentRegimePage() {
       tournamentDispatch({ type: 'update', key: 'tournamentRegimeMetadataTrigger', value: new Date().valueOf() });
     }
   }, [descriptionUpdateReturnDate]);
+
+  useEffect(() => {
+    if (syncResponseReturnDate) {
+      setSyncSlotsLoading(false);
+    }
+
+    if (syncResponse && syncResponseReturnDate) {
+      console.log(syncResponse);
+    }
+  }, [syncResponse, syncResponseReturnDate]);
 
   const [newSlotVisible, setNewSlotVisible] = useState(false);
 
@@ -109,6 +127,11 @@ function TournamentRegimePage() {
 
   const bulkLoadTournamentSlots = () => {
     message.error('Not implemented yet');
+  }
+
+  const synchronizeSlots = () => {
+    setSyncSlotsLoading(true);
+    syncSlots({ tournamentRegimeId: tournamentRegimeId });
   }
 
   const dismissNewSlotModal = (triggerSlotsDownload) => {
@@ -189,6 +212,15 @@ function TournamentRegimePage() {
           style={{ marginTop: 8, marginBottom: 8 }}
         >
           Bulk Load
+        </Button>
+        <Button
+          type='primary'
+          size='small'
+          loading={syncSlotsLoading}
+          onClick={synchronizeSlots}
+          style={{ marginTop: 8, marginBottom: 8 }}
+        >
+          Synchronize
         </Button>
       </Row>
       <Row justify='center'>
