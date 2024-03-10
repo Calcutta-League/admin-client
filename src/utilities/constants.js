@@ -56,5 +56,6 @@ export const MANAGEMENT_SERVICE_ENDPOINTS = {
   GET_LEGACY_LEAGUES: '/getLegacyLeagues',
   SYNC_LEAGUE: '/syncLeague',
   BATCH_SYNC_LEAGUES: '/batchSyncLeagues',
-  SKIP_SYNC: '/skipSync'
+  SKIP_SYNC: '/skipSync',
+  SYNCHRONIZE_SLOTS: '/synchronizeSlots'
 };
